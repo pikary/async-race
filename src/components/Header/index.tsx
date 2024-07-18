@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '../../shared/Button';
 import Arrow from '../../shared/Arrow';
 import './styles.scss';
+// import Logo from '../../shared/Logo';
 
 function Header() {
   return (
@@ -35,16 +36,11 @@ function Header() {
               <Arrow color="pink" />
               <Arrow color="pink" />
               <Arrow color="pink" />
-              <Arrow color="pink" />
-              <Arrow color="pink" />
           </div>
-          <div className="perspective-box">
-              <div className="rectangle first" />
-              <div className="rectangle second" />
+          <div className="header__logo">
+              <div>Async Race</div>
           </div>
           <div className="header__arrows">
-              <Arrow color="blue" />
-              <Arrow color="blue" />
               <Arrow color="blue" />
               <Arrow color="blue" />
               <Arrow color="blue" />
