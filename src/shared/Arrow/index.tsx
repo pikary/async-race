@@ -11,10 +11,7 @@ interface ArrowProps{
 function Arrow(props:ArrowProps) {
   const { color } = props;
   return (
-      <div className={classNames('arrow', color)}>
-          {/* <div className={classNames('arrow-top', color)} />
-          <div className={classNames('arrow-bottom', color)} /> */}
-      </div>
+      <div className={classNames('arrow', color)} />
   );
 }
 

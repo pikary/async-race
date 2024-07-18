@@ -38,10 +38,21 @@ function Header() {
               <Arrow color="pink" />
               <Arrow color="pink" />
           </div>
-          <div />
+          <div className="perspective-box">
+              <div className="rectangle first" />
+              <div className="rectangle second" />
+          </div>
           <div className="header__arrows">
-              <Arrow />
-              <Arrow />
+              <Arrow color="blue" />
+              <Arrow color="blue" />
+              <Arrow color="blue" />
+              <Arrow color="blue" />
+              <Arrow color="blue" />
+              <Arrow color="blue" />
+              <Arrow color="blue" />
+              <Arrow color="blue" />
+              <Arrow color="blue" />
+              <Arrow color="blue" />
           </div>
       </header>
   );
