@@ -19,13 +19,42 @@
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
+    "settings": {
+        "import/resolver":{
+            "typescript": {}
+        }
+    },
     "plugins": [
         "react",
         "@typescript-eslint"
     ],
     "rules": {
-        "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
-        "react/jsx-indent": ["error", 4]  // Enforce 2-space indentation in JSX
+        "react/jsx-filename-extension": [
+            2,
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".ts",
+                    ".tsx"
+                ]
+            }
+        ],
+        "react/jsx-indent": [
+            "error",
+            4
+        ],
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "js": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never"
+            }
+        ],
+        "linebreak-style": ["error", "unix"]
 
     }
 }
