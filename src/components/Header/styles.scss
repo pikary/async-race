@@ -1,0 +1,15 @@
+.header{
+    display: flex;
+
+    margin-top: 40px;
+    &__buttons{
+        width: 150px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    &__arrows{
+        display: flex;
+        gap: 10px;
+    }
+}

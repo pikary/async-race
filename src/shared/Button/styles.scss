@@ -1,0 +1,22 @@
+.button{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 15px;
+    border-color: lightblue;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    &.pink{
+        border: 2px solid #BB9BCB;
+        color: #BB9BCB;
+    }
+    &.blue{
+        border: 2px solid #A1C6D4;
+        color: #A1C6D4;
+    }
+}
