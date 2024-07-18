@@ -1,30 +1,82 @@
-.header{
+.header {
     display: flex;
     width: 100%;
     height: 135px;
     margin-top: 40px;
     justify-content: space-between;
-    &__buttons{
+
+    &__buttons {
         width: 150px;
         display: flex;
         flex-direction: column;
         gap: 30px;
     }
-    &__arrows{
+
+    &__arrows {
         flex-shrink: 1;
         display: flex;
         gap: 10px;
         align-self: flex-end;
         margin-bottom: 10px;
-    
+
         &:nth-child(2) {
-          align-self: flex-start;
-          margin-top: 10px; /* Adjust as needed to position at the top */
+            align-self: flex-start;
+            margin-top: 10px;
+            /* Adjust as needed to position at the top */
         }
     }
-    &__logo{
+
+    &__logo {
+        position: relative;
         flex-basis: 350px;
         height: 100%;
-        border: 1px solid red;
-    }  
-} 
+        perspective: 350px;
+        display: flex;
+        justify-content: center;
+        color: white;
+        align-items: center;
+        border: 10px solid #bb9bcb;
+        box-shadow: -15px 0px 40px 4px rgb(255, 0, 255), 15px -10px 15px -8px pink;
+     
+
+        border-radius: 10px;
+        transform-origin: 500px;
+        transform: rotate(-5deg);
+        &__container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 85%;
+            height: 80%;
+            border: 10px solid #a1c6d4;
+            box-shadow:0px 0px 15px 10px rgb(91, 208, 247);
+            border-radius: 10px;
+            p{
+                transform: rotate(5deg);
+            }
+        }
+
+        // &__rectangle {
+        //     position: absolute;
+        //     top: 0;
+        //     left: 0;
+        //     width: 100%;
+        //     height: 100%;
+        //     background-color: transparent;
+        //     border-radius: 25px;
+        //     border: 3px dashed red;
+        //     /* Specify border width, style, and color */
+        //     padding: 20px;
+
+        //     &.first{
+        //         transform: rotateY(45deg);
+        //         z-index: 5;
+        //     }
+        //     &.second{
+        //         transform: rotateY(-10deg);
+        //         z-index: 4;
+        //     }
+        // }
+
+    }
+}

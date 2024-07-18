@@ -38,7 +38,15 @@ function Header() {
               <Arrow color="pink" />
           </div>
           <div className="header__logo">
-              <div>Async Race</div>
+              <div className="header__logo__container">
+                  <p>Async race</p>
+              </div>
+              {/* <div className="header__logo__rectangle first" />
+              <div className="header__logo__rectangle second">
+                  Async Race
+
+              </div> */}
+
           </div>
           <div className="header__arrows">
               <Arrow color="blue" />
