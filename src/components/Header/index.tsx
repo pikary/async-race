@@ -14,18 +14,16 @@ function Header() {
                 onClick={() => {
                   console.log();
                 }}
-              >
-                  garage
-              </Button>
+                text="garage"
+              />
               <Button
                 className="blue"
                 type="button"
                 onClick={() => {
                   console.log();
                 }}
-              >
-                  winners
-              </Button>
+                text="winners"
+              />
           </div>
           <div className="header__arrows">
               <Arrow color="pink" />
