@@ -39,7 +39,11 @@ function Header() {
           </div>
           <div className="header__logo">
               <div className="header__logo__container">
-                  <p>Async race</p>
+                  <h1>
+                      Async
+                      <br />
+                      race
+                  </h1>
               </div>
               {/* <div className="header__logo__rectangle first" />
               <div className="header__logo__rectangle second">
