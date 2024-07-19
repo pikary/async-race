@@ -15,7 +15,7 @@ function Garage() {
     const container = containerRef.current;
     if (container) {
       const containerWidth = container.clientWidth;
-      const arrowWidth = 30; // Assuming the width of Arrow is 20px, adjust accordingly
+      const arrowWidth = 30; // 20 + флекс гап 10
       const numberOfArrows = Math.floor(containerWidth / arrowWidth);
       setArrowCount(numberOfArrows);
     }
