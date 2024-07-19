@@ -3,15 +3,17 @@ import classNames from 'classnames';
 import './styles.scss';
 
 type ArrowType = 'pink' | 'blue'
+type ArrowSize = 'small' | 'normal'
 
 interface ArrowProps{
-    color?: ArrowType
+    color?: ArrowType,
+    size:ArrowSize
 }
 
 function Arrow(props:ArrowProps) {
-  const { color } = props;
+  const { color, size } = props;
   return (
-      <div className={classNames('arrow', color)} />
+      <div className={classNames('arrow', color, size)} />
   );
 }
 

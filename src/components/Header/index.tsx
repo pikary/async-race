@@ -26,14 +26,14 @@ function Header() {
               />
           </div>
           <div className="header__arrows">
-              <Arrow color="pink" />
-              <Arrow color="pink" />
-              <Arrow color="pink" />
-              <Arrow color="pink" />
-              <Arrow color="pink" />
-              <Arrow color="pink" />
-              <Arrow color="pink" />
-              <Arrow color="pink" />
+              <Arrow size="normal" color="pink" />
+              <Arrow size="normal" color="pink" />
+              <Arrow size="normal" color="pink" />
+              <Arrow size="normal" color="pink" />
+              <Arrow size="normal" color="pink" />
+              <Arrow size="normal" color="pink" />
+              <Arrow size="normal" color="pink" />
+              <Arrow size="normal" color="pink" />
           </div>
           <div className="header__logo">
               <div className="header__logo__container">
@@ -51,14 +51,14 @@ function Header() {
 
           </div>
           <div className="header__arrows">
-              <Arrow color="blue" />
-              <Arrow color="blue" />
-              <Arrow color="blue" />
-              <Arrow color="blue" />
-              <Arrow color="blue" />
-              <Arrow color="blue" />
-              <Arrow color="blue" />
-              <Arrow color="blue" />
+              <Arrow size="normal" color="blue" />
+              <Arrow size="normal" color="blue" />
+              <Arrow size="normal" color="blue" />
+              <Arrow size="normal" color="blue" />
+              <Arrow size="normal" color="blue" />
+              <Arrow size="normal" color="blue" />
+              <Arrow size="normal" color="blue" />
+              <Arrow size="normal" color="blue" />
           </div>
       </header>
   );

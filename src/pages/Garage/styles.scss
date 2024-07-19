@@ -1,27 +1,100 @@
-.garage{
+.garage {
     margin-top: 80px;
-    &__header{
+
+    &__header {
         display: flex;
         justify-content: space-between;
-        &__control-btns{
+
+        &__control-btns {
             display: flex;
             gap: 10px;
-            button{
+
+            button {
                 // height: 50px;
             }
         }
-        &__form{
+
+        &__form {
             display: flex;
             gap: 10px;
-            &-input{
+
+            &-input {
                 width: 150px;
                 max-height: fit-content;
             }
         }
-        input[type="color"]{
+
+        input[type="color"] {
             width: 40px;
-            height:40px;
+            height: 40px;
             cursor: pointer;
         }
     }
+
+    &__race {
+        margin-top: 50px;
+
+        &__boundary{
+            position: relative;
+            width: 100%;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            &-upper{
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: -5px;
+                    left: 0;
+                    width: 70%;
+                    height: 50px;
+                    border: none;
+                    border-top: 2px solid white;
+                }
+                &::after{
+                    content: '';
+                    position: absolute;
+                    top: -5px;
+                    left: calc(70% + 45px);
+                    width: calc(30% - 45px);
+                    height: 50px;
+                    border: none;
+                    border-top: 2px solid white;
+                }
+            }
+            &-under{
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top:5px;
+                    left: 0;
+                    width: 30%;
+                    height: 50px;
+                    border: none;
+                    border-bottom: 2px solid white;
+                }
+                &::after{
+                    content: '';
+                    position: absolute;
+                    top: 5px;
+                    left: calc(30% + 45px);
+                    width: calc(70% - 45px);
+                    height: 50px;
+                    border: none;
+                    border-bottom: 2px solid white;
+                }
+            }
+        }
+        &__line {
+            position: relative;
+            width: 100%;
+            height: 30px;
+            display: flex;
+            gap: 10px;
+           
+            
+        }
+    }
+
 }
