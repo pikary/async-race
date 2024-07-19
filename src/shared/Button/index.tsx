@@ -6,20 +6,21 @@ type ButtonType = 'pink' | 'blue'
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?:ReactNode|null,
   text:string,
-  className?: ButtonType,
+  className?: string,
   onClick?: () => void,
+  color:ButtonType
 }
 
 function Button(props:ButtonProps) {
   const {
-    onClick, className, type, disabled, text, icon,
+    onClick, className, type, disabled, text, icon, color,
   } = props;
 
   return (
       <button
         disabled={disabled || false}
         onClick={onClick}
-        className={classnames('button', className)}
+        className={classnames('button', color, className)}
         type={type}
       >
           <p>

@@ -9,7 +9,7 @@ function Header() {
       <header className="header">
           <div className="header__buttons">
               <Button
-                className="pink"
+                color="pink"
                 type="button"
                 onClick={() => {
                   console.log();
@@ -17,7 +17,7 @@ function Header() {
                 text="garage"
               />
               <Button
-                className="blue"
+                color="blue"
                 type="button"
                 onClick={() => {
                   console.log();
