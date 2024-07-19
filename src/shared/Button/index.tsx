@@ -4,14 +4,14 @@ import classnames from 'classnames';
 
 type ButtonType = 'pink' | 'blue'
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  icon?:ReactNode|null,
-  text:string,
+  icon?: ReactNode | null,
+  text?: string,
   className?: string,
   onClick?: () => void,
-  color?:ButtonType
+  color?: ButtonType
 }
 
-function Button(props:ButtonProps) {
+function Button(props: ButtonProps) {
   const {
     onClick, className, type, disabled, text, icon, color,
   } = props;
@@ -23,10 +23,13 @@ function Button(props:ButtonProps) {
         className={classnames('button', color, className)}
         type={type}
       >
+          {text && (
           <p>
               {text}
 
           </p>
+          )}
+
           {icon}
       </button>
   );
@@ -35,8 +38,9 @@ function Button(props:ButtonProps) {
 Button.defaultProps = {
   icon: null,
   className: '',
-  onClick: () => {},
+  onClick: () => { },
   color: '',
+  text: '',
 };
 
 export default Button;

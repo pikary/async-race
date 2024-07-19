@@ -3,16 +3,11 @@ import React from 'react';
 import classNames from 'classnames';
 import './styles.scss';
 
-interface InputProps {
-  className?:string,
-  type: string;
-  name: string;
-  placeholder: string;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  className?: string;
   labelText: string;
-  onChange?: () => void;
 }
-
-function Input({ labelText, onChange, ...props }:InputProps) {
+function Input({ labelText, ...props }:InputProps) {
   return (
       <input
         {...props}
@@ -24,7 +19,6 @@ function Input({ labelText, onChange, ...props }:InputProps) {
 }
 
 Input.defaultProps = {
-  onChange: () => {},
   className: '',
 };
 

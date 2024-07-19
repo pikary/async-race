@@ -122,7 +122,34 @@
             }
             &__controls{
                 display: flex;
-                gap: 15px;
+                align-items: center;
+                gap: 5px;
+
+                &__btn{
+                    &.disabled{
+                        svg{
+                            transition: color 0.2s ease-in-out;
+                            color: gray;
+                        }
+                        &:hover{
+                            svg{
+                                color:gray;
+                                filter: none
+                            } 
+                        }
+                    }
+                    svg{
+                        transition: color 0.2s ease-in-out;
+                        color: #A1C6D4;
+                    }
+                    &:hover{
+                        svg{
+                            color:#BB9BCB;
+                            filter: drop-shadow(4px 5px 15px rgba(252, 16, 146, 0.7));
+
+                        }
+                    }
+                }
             }
         }
     }

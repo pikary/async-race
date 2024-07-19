@@ -1,4 +1,6 @@
 import React from 'react';
+import { useAppDispatch } from '../../store';
+import { deleteCar } from '../../store/cars';
 import { Car } from '../../store/cars/types';
 import Button from '../../shared/Button';
 import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
@@ -9,12 +11,16 @@ interface TrackProps{
 }
 
 function Track({ car }:TrackProps) {
+  const dispatch = useAppDispatch();
+  const handleDeleteCar = (id:number) => {
+    dispatch(deleteCar(id));
+  };
   return (
       <div className="track">
           <div className="track__car">
               <div className="track__car__btns">
                   <Button text="SELECT" color="blue" />
-                  <Button text="REMOVE" color="pink" />
+                  <Button text="REMOVE" color="pink" onClick={() => handleDeleteCar(car.id)} />
               </div>
               <div className="track__car__btns">
                   <Button text="A" color="blue" />
