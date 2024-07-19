@@ -4,11 +4,13 @@
     // padding-bottom: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+
     &__car {
         display: flex;
-        gap: 10px; 
+        gap: 10px;
         align-items: center;
         padding: 5px 0;
+
         &__btns {
             display: flex;
             flex-direction: column;
@@ -24,43 +26,44 @@
     &__road {
         position: relative;
         flex: 1;
-        border-top: 1px solid white;
         border-bottom: 1px solid white;
+        border-top: 1px solid white;
 
-        
-       
-        &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 20px;
-            height: 99%;
-            border: 1px solid #a1c6d4;;
-            color: white;
-            text-align: center;
-            background: repeating-linear-gradient(to bottom,
-            transparent,
-            transparent 10px,
-            rgba(187, 155, 203, 0.5) 10px,
-            rgba(187, 155, 203, 0.5) 20px);
-        }
 
+        &::before,
         &::after {
             content: '';
             position: absolute;
             top: 0;
-            right: 20px;
-            width: 50px;
+            width: 20px;
             height: 99%;
-            border: 1px solid #a1c6d4;;
-            color: white;
-            text-align: center;
+
+
+            // border-top: 1px solid red;
+
+        }
+
+        &::before {
+            content: '';
+            left: 0;
+            border-left: 1px solid white;
+            border-right: 1px solid white;
             background: repeating-linear-gradient(to bottom,
-            rgba(187, 155, 203, 0.5),
-            rgba(187, 155, 203, 0.5)  10px,
-            transparent  10px,
-            transparent 20px);
+                    transparent,
+                    transparent 10px,
+                    rgba(187, 155, 203, 0.5) 10px,
+                    rgba(187, 155, 203, 0.5) 20px);
+        }
+
+        &::after {
+            right: 100px;
+            box-shadow: -2px 0px 25px 2px rgb(255, 0, 255), 10px 5px 20px 2px #a1c6d4;
+
+            background: repeating-linear-gradient(to bottom,
+                    rgba(187, 155, 203, 0.7),
+                    rgba(187, 155, 203, 0.7) 10px,
+                    transparent 10px,
+                    transparent 20px);
         }
 
 
