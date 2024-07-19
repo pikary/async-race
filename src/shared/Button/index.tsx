@@ -8,7 +8,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text:string,
   className?: string,
   onClick?: () => void,
-  color:ButtonType
+  color?:ButtonType
 }
 
 function Button(props:ButtonProps) {
@@ -36,6 +36,7 @@ Button.defaultProps = {
   icon: null,
   className: '',
   onClick: () => {},
+  color: '',
 };
 
 export default Button;

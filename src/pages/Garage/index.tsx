@@ -92,7 +92,14 @@ function Garage() {
                   <div className="garage__race__boundary-under" />
                   {arrows}
               </div>
-
+              <div className="garage__race__pagination">
+                  <h4>GARAGE (105)</h4>
+                  <div className="garage__race__pagination__controls">
+                      <Button text="" onClick={() => {}} icon={<FaPlay />} />
+                      <h4>PAGE #1</h4>
+                      <Button text="" onClick={() => {}} icon={<FaPlay />} />
+                  </div>
+              </div>
           </div>
       </div>
   );

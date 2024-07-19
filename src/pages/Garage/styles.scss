@@ -108,6 +108,23 @@
 
 
         }
+        &__pagination{
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            h4{
+                display: block;
+                font-size: var(--font-size-xl);
+                color: rgba(187, 155, 203, 1);
+                text-shadow:2px 2px 15px  rgb(252, 16, 146) ;
+                font-weight: 400;
+            }
+            &__controls{
+                display: flex;
+                gap: 15px;
+            }
+        }
     }
 
 }
