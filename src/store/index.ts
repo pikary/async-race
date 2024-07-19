@@ -6,8 +6,8 @@ const rootReducer = combineReducers({ cars: CarsReducer });
 
 const store = configureStore({ reducer: rootReducer });
 export type RootState = ReturnType<typeof rootReducer>;
-export type AppStore = ReturnType<typeof store>;
-export type AppDispatch = AppStore['dispatch'];
+export type AppStore = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;

@@ -4,7 +4,18 @@ import { RxUpdate } from 'react-icons/rx';
 import Button from '../../shared/Button';
 import Input from '../../shared/Input';
 import Arrow from '../../shared/Arrow';
+import Track from '../../components/Track';
 import './styles.scss';
+
+const cars = [
+  { name: 'Cobalt', id: 1, color: 'red' },
+  { name: 'Toyota', id: 2, color: 'white' },
+  { name: 'Honda', id: 3, color: 'blue' },
+  { name: 'Ford', id: 4, color: 'black' },
+  { name: 'Chevrolet', id: 5, color: 'green' },
+  { name: 'BMW', id: 6, color: 'yellow' },
+  { name: 'Audi', id: 7, color: 'purple' },
+];
 
 function Garage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,9 +83,11 @@ function Garage() {
                   {arrows}
               </div>
               <div>
-                  RACE
+                  {cars.map((car) => (
+                      <Track key={car.id} car={car} />
+                  ))}
               </div>
-              <div className="garage__race__boundary" ref={containerRef}>
+              <div className="garage__race__boundary" style={{ marginTop: 20 }} ref={containerRef}>
                   <div className="garage__race__boundary-upper" />
                   <div className="garage__race__boundary-under" />
                   {arrows}

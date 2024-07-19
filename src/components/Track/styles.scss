@@ -1,0 +1,80 @@
+.track {
+    display: flex;
+    // padding-top: 10px;
+    // padding-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    &__car {
+        display: flex;
+        gap: 10px; 
+        align-items: center;
+        padding: 5px 0;
+        &__btns {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+
+            button {
+                flex: 1;
+            }
+        }
+    }
+
+    &__road {
+        position: relative;
+        flex: 1;
+        border-top: 1px solid white;
+        border-bottom: 1px solid white;
+
+        
+       
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 99%;
+            border: 1px solid #a1c6d4;;
+            color: white;
+            text-align: center;
+            background: repeating-linear-gradient(to bottom,
+            transparent,
+            transparent 10px,
+            rgba(187, 155, 203, 0.5) 10px,
+            rgba(187, 155, 203, 0.5) 20px);
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 50px;
+            height: 99%;
+            border: 1px solid #a1c6d4;;
+            color: white;
+            text-align: center;
+            background: repeating-linear-gradient(to bottom,
+            rgba(187, 155, 203, 0.5),
+            rgba(187, 155, 203, 0.5)  10px,
+            transparent  10px,
+            transparent 20px);
+        }
+
+
+        &__carname {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 50px;
+            font-size: var(--font-size-xl);
+            font-weight: 400;
+            color: gray;
+
+            letter-spacing: 0.1rem;
+            user-select: none;
+        }
+    }
+}

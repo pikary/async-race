@@ -16,7 +16,6 @@ const CarsSlice = createSlice({
       state.data?.push(action.payload);
     },
   },
-
 });
 
 // export const {} = EducationSlice.actions;
