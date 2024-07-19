@@ -30,17 +30,20 @@ function Garage() {
                   />
               </div>
               <form className="garage__header__form garage__header__form-create">
-                  <Input type="text" name="brand" placeholder="TYPE CAR BRAND" labelText="" />
+                  <Input className="garage__header__form-input" type="text" name="brand" placeholder="Car brand" labelText="" />
+                  <input type="color" />
+
                   <Button color="pink" text="create" type="submit" />
               </form>
               <div className="garage__header__form garage__header__form-update">
-                  <Input type="text" name="brand" placeholder="TYPE CAR BRAND" labelText="" />
+                  <Input className="garage__header__form-input" type="text" name="brand" placeholder="Car brand" labelText="" />
+                  <input type="color" />
                   <Button color="pink" text="update" type="submit" />
               </div>
 
               <Button color="blue" text="generate cars" className="garage__header__gen" />
-
           </div>
+          <div className="garage__line" />
 
       </div>
   );

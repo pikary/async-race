@@ -13,36 +13,15 @@
         &__form{
             display: flex;
             gap: 10px;
+            &-input{
+                width: 150px;
+                max-height: fit-content;
+            }
         }
-        // grid-template-columns: repeat(12,1fr);
-        // height: 80px;
-
-        // &__control-btns{
-        //     display: flex;
-        //     gap: 10px;
-        //     grid-column: 1/3;
-        //     width: 100%;
-        //     height: 50px;
-        //     align-self: center;
-        //     button{
-        //         flex: 1;
-        //     }
-        // }
-        // &__form{
-        //     display:flex;
-        //     align-items: center;
-        //     gap: 10px;
-        // }
-        // &__form-create{
-        //     grid-column: 5/8;
-            
-        // }
-        // &__form-update{
-        //     grid-column: 8/10;
-            
-        // }
-        // &__gen{
-
-        // }
+        input[type="color"]{
+            width: 40px;
+            height:40px;
+            cursor: pointer;
+        }
     }
 }

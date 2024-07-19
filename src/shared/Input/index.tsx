@@ -1,8 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
+import classNames from 'classnames';
 import './styles.scss';
 
 interface InputProps {
+  className?:string,
   type: string;
   name: string;
   placeholder: string;
@@ -15,7 +17,7 @@ function Input({ labelText, onChange, ...props }:InputProps) {
       <input
         {...props}
         id={props.name}
-        className="input"
+        className={classNames('input', props.className)}
       />
 
   );
@@ -23,6 +25,7 @@ function Input({ labelText, onChange, ...props }:InputProps) {
 
 Input.defaultProps = {
   onChange: () => {},
+  className: '',
 };
 
 export default Input;
