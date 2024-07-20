@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaPlay } from 'react-icons/fa6';
 import { RxUpdate } from 'react-icons/rx';
 import { BiRightArrow, BiLeftArrow } from 'react-icons/bi';
-
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import Button from '../../shared/Button';
 import Input from '../../shared/Input';
@@ -74,10 +74,19 @@ function Garage() {
     }
   }, []);
 
-  const handleGenerateCars2 = () => {
+  const handleGenerateCars2 = async () => {
     const randomCars = generateRandomCars(100);
     const requests = randomCars.map((car) => dispatch(createCarAsync(car)));
-    console.log(requests);
+
+    try {
+    // Wait for all requests to complete
+      const results = await Promise.all(requests.map((p) => p.then(unwrapResult).catch((e) => e)));
+
+      // Log the results
+      console.log(results);
+    } catch (error) {
+      console.error('Error generating cars:', error);
+    }
   };
   useEffect(() => {
     const fetchGarageHandler = async () => {
