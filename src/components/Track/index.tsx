@@ -1,26 +1,29 @@
 import React from 'react';
-import { useAppDispatch } from '../../store';
-import { deleteCar } from '../../store/cars';
+import { useAppDispatch, useTypedSelector } from '../../store';
 import { Car } from '../../store/cars/types';
 import Button from '../../shared/Button';
 import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
 import './styles.scss';
+import { selectCar } from '../../store/cars';
+import { deleteCarAsync } from '../../store/cars/api';
 
 interface TrackProps{
     car:Car
 }
 
 function Track({ car }:TrackProps) {
+  const { selectedCar } = useTypedSelector((state) => state.cars);
   const dispatch = useAppDispatch();
-  const handleDeleteCar = (id:number) => {
-    dispatch(deleteCar(id));
+  const handleDeleteCar = async (id:number) => {
+    await dispatch(deleteCarAsync(id));
   };
+  const handleSelectCar = (carparam:Car) => { dispatch(selectCar(carparam)); };
   return (
       <div className="track">
           <div className="track__car">
               <div className="track__car__btns">
-                  <Button text="SELECT" color="blue" />
-                  <Button text="REMOVE" color="pink" onClick={() => handleDeleteCar(car.id)} />
+                  <Button text="SELECT" color="blue" onClick={() => handleSelectCar(car)} className={`${selectedCar?.id === car.id ? 'track__car__btns-selected' : ''}`} />
+                  <Button text="REMOVE" color="pink" onClick={() => handleDeleteCar(car.id!)} />
               </div>
               <div className="track__car__btns">
                   <Button text="A" color="blue" />

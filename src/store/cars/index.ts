@@ -9,12 +9,14 @@ import {
 
 interface CarsSliceState extends SliceState<Car[]|undefined> {
   currentPage:number,
+  selectedCar:Car|null
 }
 const initialState: CarsSliceState = {
   isLoading: false,
   data: [],
   error: undefined,
   currentPage: 1,
+  selectedCar: null,
 };
 
 const CarsSlice = createSlice({
@@ -44,6 +46,23 @@ const CarsSlice = createSlice({
         return;
       }
       state.currentPage = action.payload;
+    },
+    selectCar: (state, action:PayloadAction<Car>) => {
+      if (state.selectedCar && state.selectedCar.id === action.payload.id) {
+        state.selectedCar = null;
+      } else {
+        state.selectedCar = action.payload;
+      }
+    },
+    updateSelectedCarName: (state, action: PayloadAction<string>) => {
+      if (state.selectedCar) {
+        state.selectedCar.name = action.payload;
+      }
+    },
+    updateSelectedCarColor: (state, action: PayloadAction<string>) => {
+      if (state.selectedCar) {
+        state.selectedCar.color = action.payload;
+      }
     },
   },
   extraReducers(builder) {
@@ -107,7 +126,13 @@ const CarsSlice = createSlice({
 });
 
 export const {
-  createCar, deleteCar, generateCars, setCurrentPage,
+  createCar,
+  deleteCar,
+  generateCars,
+  setCurrentPage,
+  selectCar,
+  updateSelectedCarColor,
+  updateSelectedCarName,
 } = CarsSlice.actions;
 
 export default CarsSlice.reducer;

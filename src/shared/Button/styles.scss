@@ -25,4 +25,10 @@
         margin: 0;
         line-height: 1;
     }
+    &:disabled{
+        cursor:default;
+        user-select: none;
+        border: 2px solid gray;
+        color: gray;
+    }
 }

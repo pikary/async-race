@@ -26,6 +26,7 @@ const baseRequest = async <ReturnType>(
     const result = await req.json();
 
     if (!req.ok) {
+      if (req.status === 404) throw new Error('Not found');
       throw result.message;
     }
     return result as ReturnType;

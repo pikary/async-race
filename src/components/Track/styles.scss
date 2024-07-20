@@ -19,6 +19,14 @@
 
             button {
                 flex: 1;
+                transition: all 0.2s ease-in-out;
+
+            }
+
+            &-selected {
+                box-shadow: 3px 5px 10px 3px #a1c6d4;
+                text-shadow:2px 3px 8px #a1c6d4;
+
             }
         }
     }

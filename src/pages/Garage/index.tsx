@@ -3,7 +3,6 @@ import { FaPlay } from 'react-icons/fa6';
 import { RxUpdate } from 'react-icons/rx';
 import { BiRightArrow, BiLeftArrow } from 'react-icons/bi';
 
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import Button from '../../shared/Button';
 import Input from '../../shared/Input';
@@ -11,13 +10,15 @@ import Arrow from '../../shared/Arrow';
 import Track from '../../components/Track';
 import { Car } from '../../store/cars/types';
 import './styles.scss';
-import { createCar, generateCars, setCurrentPage } from '../../store/cars';
-import { getCarsAsync } from '../../store/cars/api';
+import {
+  generateCars, setCurrentPage, updateSelectedCarColor, updateSelectedCarName,
+} from '../../store/cars';
+import { createCarAsync, getCarsAsync, updateCarAsync } from '../../store/cars/api';
 
 const CARS_PER_PAGE = 7;
 
 function Garage() {
-  const { data, currentPage } = useTypedSelector((state) => state.cars);
+  const { data, currentPage, selectedCar } = useTypedSelector((state) => state.cars);
   const dispatch = useAppDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -31,13 +32,23 @@ function Garage() {
   const handleColorChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setColor(e.target.value);
   };
-  const handleCreateCar = (e:React.FormEvent) => {
+  const handleCreateCar = async (e:React.FormEvent) => {
+    try {
+      e.preventDefault();
+      const newCar:Car = { name: carName, color };
+      await dispatch(createCarAsync(newCar));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCarName('');
+      setColor('');
+    }
+  };
+  const handleUpdateCar = async (e:React.FormEvent) => {
     e.preventDefault();
-    const newCar:Car = { name: carName, color, id: Math.random() };
-    dispatch(createCar(newCar));
-    // cleanUp
-    setCarName('');
-    setColor('');
+    if (selectedCar) {
+      await dispatch(updateCarAsync(selectedCar));
+    }
   };
   const handleGenerateCars = () => {
     dispatch(generateCars());
@@ -63,9 +74,7 @@ function Garage() {
   }, []);
   useEffect(() => {
     const fetchGarageHandler = async () => {
-      const result = await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
-      const cars = unwrapResult(result);
-      console.log(`hey cars : ${cars}`);
+      await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
     };
     fetchGarageHandler();
   }, [dispatch, currentPage]);
@@ -104,11 +113,11 @@ function Garage() {
                   <input type="color" onChange={handleColorChange} value={color} />
                   <Button color="pink" text="create" type="submit" />
               </form>
-              <div className="garage__header__form garage__header__form-update">
-                  <Input className="garage__header__form-input" type="text" name="update-car" placeholder="Car brand" labelText="" />
-                  <input type="color" />
-                  <Button color="pink" text="update" type="submit" />
-              </div>
+              <form className="garage__header__form garage__header__form-update" onSubmit={handleUpdateCar}>
+                  <Input disabled={selectedCar === null} className="garage__header__form-input" value={selectedCar?.name} onChange={(e) => dispatch(updateSelectedCarName(e.target.value))} type="text" name="update-car" placeholder="Car brand" labelText="" />
+                  <input disabled={selectedCar === null} type="color" value={selectedCar?.color} onChange={(e) => dispatch(updateSelectedCarColor(e.target.value))} />
+                  <Button disabled={selectedCar === null} color="pink" text="update" type="submit" />
+              </form>
 
               <Button color="blue" text="generate cars" className="garage__header__gen" onClick={handleGenerateCars} />
           </div>
