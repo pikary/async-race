@@ -1,21 +1,30 @@
 import React from 'react';
-import { useAppDispatch, useTypedSelector } from '../../store';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { Car } from '../../store/cars/types';
 import Button from '../../shared/Button';
 import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
 import './styles.scss';
+import { useAppDispatch, useTypedSelector } from '../../store';
 import { selectCar } from '../../store/cars';
-import { deleteCarAsync } from '../../store/cars/api';
+import { deleteCarAsync, getCarsAsync } from '../../store/cars/api';
 
 interface TrackProps{
     car:Car
 }
 
 function Track({ car }:TrackProps) {
-  const { selectedCar } = useTypedSelector((state) => state.cars);
+  const { selectedCar, totalAmount, currentPage } = useTypedSelector((state) => state.cars);
   const dispatch = useAppDispatch();
   const handleDeleteCar = async (id:number) => {
-    await dispatch(deleteCarAsync(id));
+    try {
+      unwrapResult(await dispatch(deleteCarAsync(id)));
+      // update page
+      if (totalAmount > 7) {
+        unwrapResult(await dispatch(getCarsAsync({ page: currentPage, limit: 7 })));
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
   const handleSelectCar = (carparam:Car) => { dispatch(selectCar(carparam)); };
   return (

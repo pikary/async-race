@@ -7,15 +7,21 @@ interface CarReqBody{
   color:string
 }
 
-export const getCarsAsync = createAsyncThunk<Car[], { page: number, limit: number }, { rejectValue: string }>('garage/getcars', async (reqBody, thunkAPI) => {
+interface GetGarageResponse{
+  cars:Car[],
+  totalCount:number
+}
+export const getCarsAsync = createAsyncThunk<GetGarageResponse, { page: number, limit: number }, { rejectValue: string }>('garage/getcars', async (reqBody, thunkAPI) => {
   try {
     const result = await baseRequest<Car[]>('GET', `garage?_page=${reqBody.page}&_limit=${reqBody.limit}`);
-    if (!Array.isArray(result)) {
-      return thunkAPI.rejectWithValue('Invalid response format');
-    }
-    console.log(result);
 
-    return result as Car[];
+    // get total items cound from header
+    if (result) {
+      const { headers, data } = result!;
+      const totalCount = headers.get('X-Total-Count');
+      return { cars: data, totalCount: +totalCount! } as GetGarageResponse;
+    }
+    return thunkAPI.rejectWithValue('No cars found');
   } catch (e) {
     return thunkAPI.rejectWithValue((e as Error).message);
   }
@@ -24,7 +30,7 @@ export const getCarsAsync = createAsyncThunk<Car[], { page: number, limit: numbe
 export const getCarAsync = createAsyncThunk<Car|undefined, number, { rejectValue: string }>('garage/getcar', async (id, thunkAPI) => {
   try {
     const result = await baseRequest<Car>('GET', `garage/${id}`);
-    return result as Car;
+    return result?.data as Car;
   } catch (e) {
     return thunkAPI.rejectWithValue((e as Error).message);
   }
@@ -35,7 +41,7 @@ export const createCarAsync = createAsyncThunk<Car|undefined, CarReqBody, { reje
     const result = await baseRequest<Car>('POST', 'garage', reqBody);
     console.log(result);
 
-    return result as Car;
+    return result?.data as Car;
   } catch (e) {
     return thunkAPI.rejectWithValue((e as Error).message);
   }
@@ -56,7 +62,7 @@ export const updateCarAsync = createAsyncThunk<Car|undefined, Car, { rejectValue
     const { id, name, color } = reqBody;
     const newValue = { name, color };
     const result = await baseRequest<Car>('PUT', `garage/${id}`, newValue);
-    return result as Car;
+    return result?.data as Car;
   } catch (e) {
     // @ts-ignore
     console.log(e);

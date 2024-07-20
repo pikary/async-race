@@ -9,6 +9,7 @@ import {
 
 interface CarsSliceState extends SliceState<Car[]|undefined> {
   currentPage:number,
+  totalAmount:number,
   selectedCar:Car|null
 }
 const initialState: CarsSliceState = {
@@ -16,6 +17,7 @@ const initialState: CarsSliceState = {
   data: [],
   error: undefined,
   currentPage: 1,
+  totalAmount: 0,
   selectedCar: null,
 };
 
@@ -40,8 +42,7 @@ const CarsSlice = createSlice({
       }
     },
     setCurrentPage: (state, action:PayloadAction<number>) => {
-      const length = state.data?.length || 0;
-      const maxPages = Math.ceil(length / 7);
+      const maxPages = Math.ceil(state.totalAmount / 7);
       if (action.payload === 0 || action.payload > maxPages) {
         return;
       }
@@ -73,7 +74,8 @@ const CarsSlice = createSlice({
       })
       .addCase(getCarsAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = action.payload;
+        state.data = action.payload.cars;
+        state.totalAmount = action.payload.totalCount;
       })
       .addCase(getCarsAsync.rejected, (state, action) => {
         state.isLoading = false;
@@ -85,7 +87,12 @@ const CarsSlice = createSlice({
       })
       .addCase(createCarAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data?.push(action.payload!);
+        if (state.data) {
+          if (state.data?.length < 7) {
+            state.data?.push(action.payload!);
+          }
+        }
+        state.totalAmount += 1;
       })
       .addCase(createCarAsync.rejected, (state, action) => {
         state.isLoading = false;
@@ -98,8 +105,10 @@ const CarsSlice = createSlice({
       .addCase(deleteCarAsync.fulfilled, (state, action) => {
         state.isLoading = false;
         if (action.payload && state.data) {
+          // action.meta.arg - это он берет параметр айди который кидали в thunk
           state.data = state.data.filter((car) => car.id !== action.meta.arg);
         }
+        state.totalAmount -= 1;
       })
       .addCase(deleteCarAsync.rejected, (state, action) => {
         state.isLoading = false;

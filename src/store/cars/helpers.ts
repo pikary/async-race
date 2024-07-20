@@ -11,7 +11,11 @@ const getRandomColor = () => {
 
 const getRandomCarName = () => {
   const carNames = ['Toyota', 'Honda', 'Ford', 'Chevrolet', 'BMW', 'Audi', 'Mercedes', 'Nissan', 'Mazda', 'Tesla'];
-  return carNames[Math.floor(Math.random() * carNames.length)];
+  const models = ['Corolla', 'F-150', 'Camaro', 'Civic', 'Model 3'];
+
+  return carNames[Math.floor(Math.random()
+    * carNames.length)] + models[Math.floor(Math.random()
+    * models.length)];
 };
 
 const generateRandomCars = (count: number): Car[] => Array.from({ length: count }, (_, id) => ({

@@ -4,13 +4,17 @@ interface Config {
   headers?: Record<string, string>;
   [key: string]: any;
 }
+interface ApiResponse<ReturnType>{
+  data:ReturnType,
+  headers:Headers
+}
 
 const baseRequest = async <ReturnType>(
   method: string,
   url: string,
   body: any = null,
   config: Config = {},
-): Promise<ReturnType | undefined> => {
+): Promise<ApiResponse<ReturnType> | undefined> => {
   try {
     const req = await fetch(`${API_URL}/${url}`, {
       method,
@@ -29,7 +33,9 @@ const baseRequest = async <ReturnType>(
       if (req.status === 404) throw new Error('Not found');
       throw result.message;
     }
-    return result as ReturnType;
+    console.log({ data: result, headers: req.headers });
+
+    return { data: result, headers: req.headers };
   } catch (e: any) {
     throw new Error(e);
   }

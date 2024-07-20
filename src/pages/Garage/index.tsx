@@ -11,14 +11,17 @@ import Track from '../../components/Track';
 import { Car } from '../../store/cars/types';
 import './styles.scss';
 import {
-  generateCars, setCurrentPage, updateSelectedCarColor, updateSelectedCarName,
+  setCurrentPage, updateSelectedCarColor, updateSelectedCarName,
 } from '../../store/cars';
 import { createCarAsync, getCarsAsync, updateCarAsync } from '../../store/cars/api';
+import { generateRandomCars } from '../../store/cars/helpers';
 
 const CARS_PER_PAGE = 7;
 
 function Garage() {
-  const { data, currentPage, selectedCar } = useTypedSelector((state) => state.cars);
+  const {
+    data, currentPage, selectedCar, totalAmount,
+  } = useTypedSelector((state) => state.cars);
   const dispatch = useAppDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -50,12 +53,10 @@ function Garage() {
       await dispatch(updateCarAsync(selectedCar));
     }
   };
-  const handleGenerateCars = () => {
-    dispatch(generateCars());
-  };
+  // const handleGenerateCars = () => {
+  //   dispatch(generateCars());
+  // };
 
-  const startIndex = (currentPage - 1) * CARS_PER_PAGE;
-  const paginatedCars = data?.slice(startIndex, startIndex + CARS_PER_PAGE);
   const handleNextPage = () => {
     dispatch(setCurrentPage(currentPage + 1));
   };
@@ -72,11 +73,18 @@ function Garage() {
       setArrowCount(numberOfArrows);
     }
   }, []);
+
+  const handleGenerateCars2 = () => {
+    const randomCars = generateRandomCars(100);
+    const requests = randomCars.map((car) => dispatch(createCarAsync(car)));
+    console.log(requests);
+  };
   useEffect(() => {
     const fetchGarageHandler = async () => {
       await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
     };
     fetchGarageHandler();
+    console.log(data);
   }, [dispatch, currentPage]);
   const arrows = Array.from({ length: arrowCount }, (_, index) => (
       <Arrow
@@ -119,7 +127,7 @@ function Garage() {
                   <Button disabled={selectedCar === null} color="pink" text="update" type="submit" />
               </form>
 
-              <Button color="blue" text="generate cars" className="garage__header__gen" onClick={handleGenerateCars} />
+              <Button color="blue" text="generate cars" className="garage__header__gen" onClick={handleGenerateCars2} />
           </div>
           <div className="garage__race">
               <div className="garage__race__boundary" ref={containerRef}>
@@ -128,7 +136,7 @@ function Garage() {
                   {arrows}
               </div>
               <div>
-                  {paginatedCars?.map((car) => (
+                  {data?.map((car) => (
                       <Track key={car.id} car={car} />
                   ))}
               </div>
@@ -140,7 +148,7 @@ function Garage() {
               <div className="garage__race__pagination">
                   <h4>
                       GARAGE (
-                      {data?.length || 0}
+                      {totalAmount}
                       )
                   </h4>
                   <div className="garage__race__pagination__controls">
