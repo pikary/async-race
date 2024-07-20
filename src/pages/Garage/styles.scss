@@ -32,7 +32,7 @@
     }
 
     &__race {
-        margin-top: 20px;
+        margin-top: 25px;
 
         &__boundary {
             position: relative;
@@ -43,11 +43,11 @@
             gap: 10px;
 
             &:nth-child(1) {
-                margin-bottom: 20px;
+                margin-bottom: 25px;
             }
 
             &:nth-child(2) {
-                margin-top: 20px;
+                margin-top: 40px;
             }
 
             &-upper {
@@ -127,6 +127,7 @@
 
                 &__btn{
                     &.disabled{
+                        
                         svg{
                             transition: color 0.2s ease-in-out;
                             color: gray;

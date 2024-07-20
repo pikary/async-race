@@ -3,6 +3,7 @@ import { FaPlay } from 'react-icons/fa6';
 import { RxUpdate } from 'react-icons/rx';
 import { BiRightArrow, BiLeftArrow } from 'react-icons/bi';
 
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import Button from '../../shared/Button';
 import Input from '../../shared/Input';
@@ -11,18 +12,9 @@ import Track from '../../components/Track';
 import { Car } from '../../store/cars/types';
 import './styles.scss';
 import { createCar, generateCars, setCurrentPage } from '../../store/cars';
+import { getCarsAsync } from '../../store/cars/api';
 
 const CARS_PER_PAGE = 7;
-
-// const cars = [
-//   { name: 'Cobalt', id: 1, color: 'red' },
-//   { name: 'Toyota', id: 2, color: 'white' },
-//   { name: 'Honda', id: 3, color: 'blue' },
-//   { name: 'Ford', id: 4, color: 'black' },
-//   { name: 'Chevrolet', id: 5, color: 'green' },
-//   { name: 'BMW', id: 6, color: 'yellow' },
-//   { name: 'Audi', id: 7, color: 'purple' },
-// ];
 
 function Garage() {
   const { data, currentPage } = useTypedSelector((state) => state.cars);
@@ -69,6 +61,14 @@ function Garage() {
       setArrowCount(numberOfArrows);
     }
   }, []);
+  useEffect(() => {
+    const fetchGarageHandler = async () => {
+      const result = await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
+      const cars = unwrapResult(result);
+      console.log(`hey cars : ${cars}`);
+    };
+    fetchGarageHandler();
+  }, [dispatch, currentPage]);
   const arrows = Array.from({ length: arrowCount }, (_, index) => (
       <Arrow
         key={index}
@@ -100,12 +100,12 @@ function Garage() {
                   />
               </div>
               <form className="garage__header__form garage__header__form-create" onSubmit={handleCreateCar}>
-                  <Input className="garage__header__form-input" type="text" name="brand" placeholder="Car brand" labelText="" onChange={handleCarNameChange} value={carName} />
+                  <Input className="garage__header__form-input" type="text" name="create-car" placeholder="Car brand" labelText="" onChange={handleCarNameChange} value={carName} />
                   <input type="color" onChange={handleColorChange} value={color} />
                   <Button color="pink" text="create" type="submit" />
               </form>
               <div className="garage__header__form garage__header__form-update">
-                  <Input className="garage__header__form-input" type="text" name="brand" placeholder="Car brand" labelText="" />
+                  <Input className="garage__header__form-input" type="text" name="update-car" placeholder="Car brand" labelText="" />
                   <input type="color" />
                   <Button color="pink" text="update" type="submit" />
               </div>
@@ -123,7 +123,7 @@ function Garage() {
                       <Track key={car.id} car={car} />
                   ))}
               </div>
-              <div className="garage__race__boundary" style={{ marginTop: 20 }} ref={containerRef}>
+              <div className="garage__race__boundary" style={{ marginTop: 25 }} ref={containerRef}>
                   <div className="garage__race__boundary-upper" />
                   <div className="garage__race__boundary-under" />
                   {arrows}
