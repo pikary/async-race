@@ -5,6 +5,7 @@ import { SliceState } from '../types';
 import { generateRandomCars } from './helpers';
 import {
   getCarsAsync, createCarAsync, deleteCarAsync, updateCarAsync,
+  toggleCarEngineAsync,
 } from './api';
 
 interface CarsSliceState extends SliceState<Car[]|undefined> {
@@ -130,6 +131,14 @@ const CarsSlice = createSlice({
       .addCase(updateCarAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || 'Failed to update car';
+      })
+      .addCase(toggleCarEngineAsync.fulfilled, (state, action) => {
+        if (state.data) {
+          const index = state.data.findIndex((car) => car.id === action.meta.arg.id);
+          if (index >= 0) {
+            state.data[index] = { ...state.data[index], engineStatus: action.meta.arg.status };
+          }
+        }
       });
   },
 });

@@ -31,15 +31,21 @@ function Track({ car }:TrackProps) {
   };
   const handleToggleCarEngine = async (status:'started'|'stopped') => {
     try {
-      const data = unwrapResult(await dispatch(toggleCarEngineAsync({ id: car.id!, status })));
-      const calc = data.distance / data.velocity;
-      setTime(calc);
+      if (status === 'stopped') {
+        setTime(null);
+        unwrapResult(await dispatch(toggleCarEngineAsync({ id: car.id!, status })));
+      } else {
+        const data = unwrapResult(await dispatch(toggleCarEngineAsync({ id: car.id!, status })));
+        const calc = data.distance / data.velocity;
+        setTime(calc);
 
-      unwrapResult(await dispatch(driveCarAsync(car.id!)));
+        unwrapResult(await dispatch(driveCarAsync(car.id!)));
+      }
     } catch (e) {
       console.error(e);
     }
   };
+
   const handleSelectCar = (carparam:Car) => { dispatch(selectCar(carparam)); };
   return (
       <div className="track">
@@ -49,8 +55,8 @@ function Track({ car }:TrackProps) {
                   <Button text="REMOVE" color="pink" onClick={() => handleDeleteCar(car.id!)} />
               </div>
               <div className="track__car__btns">
-                  <Button text="A" color="blue" onClick={() => handleToggleCarEngine('started')} />
-                  <Button text="B" color="pink" onClick={() => handleToggleCarEngine('stopped')} />
+                  <Button disabled={car.engineStatus === 'started' || car.engineStatus === 'drive'} text="A" color="blue" onClick={() => handleToggleCarEngine('started')} />
+                  <Button disabled={(car.engineStatus && car.engineStatus === 'stopped') || !car.engineStatus} text="B" color="pink" onClick={() => handleToggleCarEngine('stopped')} />
               </div>
               <div>
                   {/* <img src={CarImg} alt="sd" /> */}
