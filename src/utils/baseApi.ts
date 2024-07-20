@@ -31,7 +31,7 @@ const baseRequest = async <ReturnType>(
 
     if (!req.ok) {
       if (req.status === 404) throw new Error('Not found');
-      throw result.message;
+      throw result;
     }
     console.log({ data: result, headers: req.headers });
 

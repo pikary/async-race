@@ -6,7 +6,9 @@ import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
 import './styles.scss';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { selectCar } from '../../store/cars';
-import { deleteCarAsync, getCarsAsync } from '../../store/cars/api';
+import {
+  deleteCarAsync, getCarsAsync, toggleCarEngineAsync, driveCarAsync,
+} from '../../store/cars/api';
 
 interface TrackProps{
     car:Car
@@ -26,6 +28,16 @@ function Track({ car }:TrackProps) {
       console.error(e);
     }
   };
+  const handleToggleCarEngine = async (status:'started'|'stopped') => {
+    try {
+      const data = unwrapResult(await dispatch(toggleCarEngineAsync({ id: car.id!, status })));
+      console.log(data);
+
+      unwrapResult(await dispatch(driveCarAsync(car.id!)));
+    } catch (e) {
+      console.error(e);
+    }
+  };
   const handleSelectCar = (carparam:Car) => { dispatch(selectCar(carparam)); };
   return (
       <div className="track">
@@ -35,8 +47,8 @@ function Track({ car }:TrackProps) {
                   <Button text="REMOVE" color="pink" onClick={() => handleDeleteCar(car.id!)} />
               </div>
               <div className="track__car__btns">
-                  <Button text="A" color="blue" />
-                  <Button text="B" color="pink" />
+                  <Button text="A" color="blue" onClick={() => handleToggleCarEngine('started')} />
+                  <Button text="B" color="pink" onClick={() => handleToggleCarEngine('stopped')} />
               </div>
               <div>
                   <CarImg fill={car.color} width={100} height={80} />
