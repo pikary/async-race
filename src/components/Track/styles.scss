@@ -35,7 +35,13 @@
         border-bottom: 1px solid white;
         border-top: 1px solid white;
 
-
+        &__car{
+            position: absolute;
+            top: 50%;
+            left: 0%;
+            transform: translateY(-50%);
+            
+        }
         &::before,
         &::after {
             content: '';
@@ -51,7 +57,7 @@
 
         &::before {
             content: '';
-            left: 0;
+            left: 100px;
             border-left: 1px solid white;
             border-right: 1px solid white;
             background: repeating-linear-gradient(to bottom,

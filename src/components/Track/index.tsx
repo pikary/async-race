@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Car } from '../../store/cars/types';
 import Button from '../../shared/Button';
@@ -16,6 +16,7 @@ interface TrackProps{
 
 function Track({ car }:TrackProps) {
   const { selectedCar, totalAmount, currentPage } = useTypedSelector((state) => state.cars);
+  const [time, setTime] = useState<number|null>(null);
   const dispatch = useAppDispatch();
   const handleDeleteCar = async (id:number) => {
     try {
@@ -31,7 +32,8 @@ function Track({ car }:TrackProps) {
   const handleToggleCarEngine = async (status:'started'|'stopped') => {
     try {
       const data = unwrapResult(await dispatch(toggleCarEngineAsync({ id: car.id!, status })));
-      console.log(data);
+      const calc = data.distance / data.velocity;
+      setTime(calc);
 
       unwrapResult(await dispatch(driveCarAsync(car.id!)));
     } catch (e) {
@@ -51,13 +53,21 @@ function Track({ car }:TrackProps) {
                   <Button text="B" color="pink" onClick={() => handleToggleCarEngine('stopped')} />
               </div>
               <div>
-                  <CarImg fill={car.color} width={100} height={80} />
                   {/* <img src={CarImg} alt="sd" /> */}
               </div>
           </div>
           <div className="track__road">
-
-              <h3 className="track__road__carname">{car.name}</h3>
+              <CarImg
+                className="track__road__car"
+                style={{
+                  transition: time ? `left ${time / 1000}s linear` : '',
+                  left: time ? 'calc(100% - 100px)' : '0%',
+                }}
+                fill={car.color}
+                width={100}
+                height={80}
+              />
+              {/* <h3 className="track__road__carname">{car.name}</h3> */}
           </div>
       </div>
   );
