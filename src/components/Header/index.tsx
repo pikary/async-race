@@ -1,10 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Button from '../../shared/Button';
 import Arrow from '../../shared/Arrow';
 import './styles.scss';
+
 // import Logo from '../../shared/Logo';
 
 function Header() {
+  const navigate = useNavigate();
+  const navigateTo = (route:string) => {
+    navigate(route);
+  };
   return (
       <header className="header">
           <div className="header__buttons">
@@ -12,7 +19,7 @@ function Header() {
                 color="pink"
                 type="button"
                 onClick={() => {
-                  console.log();
+                  navigateTo('garage');
                 }}
                 text="garage"
               />
@@ -20,7 +27,7 @@ function Header() {
                 color="blue"
                 type="button"
                 onClick={() => {
-                  console.log();
+                  navigateTo('winners');
                 }}
                 text="winners"
               />

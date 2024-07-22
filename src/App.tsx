@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import useFindWinner from './hooks/useFindWInner';
 import { useTypedSelector } from './store';
 import Garage from './pages/Garage';
+import Winners from './pages/Winners';
 import Header from './components/Header';
 import { EngineStatuses } from './store/cars/types';
 import WinnerBanner from './components/WinnerBanner';
@@ -26,7 +27,7 @@ function App() {
                   <Header />
                   <Routes>
                       <Route path="/garage" element={<Garage />} />
-                      <Route path="/winner" element={<Garage />} />
+                      <Route path="/winners" element={<Winners />} />
                   </Routes>
               </BrowserRouter>
               {winner && (
