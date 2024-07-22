@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Car, EngineStatuses } from './types';
-import baseRequest from '../../utils/baseApi';
+import baseRequest, { ApiError, isApiError } from '../../utils/baseApi';
 
 interface CarReqBody{
   name:string,
@@ -91,13 +91,15 @@ export const toggleCarEngineAsync = createAsyncThunk<EngineResponse, {id:number,
 interface DriveCarResponse{
   success:boolean
 }
-export const driveCarAsync = createAsyncThunk<DriveCarResponse, number, { rejectValue: string }>('engine', async (id, thunkAPI) => {
+export const driveCarAsync = createAsyncThunk<DriveCarResponse, number, { rejectValue: ApiError|string }>('drive_engine', async (id, thunkAPI) => {
   try {
     const result = await baseRequest<{success:boolean}>('PATCH', `engine?id=${id}&status=drive`);
     return result?.data as DriveCarResponse;
   } catch (e) {
-    // @ts-ignore
-    console.log(e);
+    if (isApiError(e)) {
+      return thunkAPI.rejectWithValue({ statusCode: e.statusCode, message: e.message, name: '' });
+    }
+    // console.log(e);
     return thunkAPI.rejectWithValue((e as Error).message);
   }
 });

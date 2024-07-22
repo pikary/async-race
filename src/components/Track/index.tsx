@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Car, EngineStatuses } from '../../store/cars/types';
 import Button from '../../shared/Button';
+
 import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
 import './styles.scss';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { selectCar } from '../../store/cars';
+
 import {
   deleteCarAsync, getCarsAsync, toggleCarEngineAsync, driveCarAsync,
 } from '../../store/cars/api';
+// eslint-disable-next-line import/no-extraneous-dependencies, import/order
+import { useSpring, animated } from 'react-spring';
 
 interface TrackProps{
     car:Car
@@ -16,7 +20,11 @@ interface TrackProps{
 
 function Track({ car }:TrackProps) {
   const { selectedCar, totalAmount, currentPage } = useTypedSelector((state) => state.cars);
+  const thisRef = useRef<SVGSVGElement >(null);
+  // const [position, setPosition] = useState('0%');
   const [time, setTime] = useState<number|null>(null);
+  const [{ left }, api] = useSpring(() => ({ left: '0px' }));
+
   const dispatch = useAppDispatch();
   const handleDeleteCar = async (id:number) => {
     try {
@@ -49,11 +57,16 @@ function Track({ car }:TrackProps) {
   useEffect(() => {
     if (car.engineStatus === EngineStatuses.STARTED) {
       const calc = car.distance / car.velocity;
-      console.log(calc);
-
       setTime(calc);
+      api.start({ left: 'calc(100% - 100px)', config: { duration: 5000 } });
+    } else if (car.engineStatus === EngineStatuses.STOPPED) {
+      if (thisRef.current) {
+        const rect = thisRef.current.getBoundingClientRect();
+        api.start({ left: `${rect.left}px`, immediate: true });
+        setTime(null);
+      }
     }
-  }, [car]);
+  }, [car, api]);
   return (
       <div className="track">
           <div className="track__car">
@@ -70,16 +83,20 @@ function Track({ car }:TrackProps) {
               </div>
           </div>
           <div className="track__road">
-              <CarImg
+              <animated.div
                 className="track__road__car"
                 style={{
-                  transition: time ? `left ${time / 1000}s linear` : '',
-                  left: time ? 'calc(100% - 100px)' : '0%',
+                  position: 'absolute',
+                  left,
                 }}
-                fill={car.color}
-                width={100}
-                height={80}
-              />
+              >
+                  <CarImg
+                    ref={thisRef}
+                    fill={car.color}
+                    width={100}
+                    height={80}
+                  />
+              </animated.div>
               {/* <h3 className="track__road__carname">{car.name}</h3> */}
           </div>
       </div>

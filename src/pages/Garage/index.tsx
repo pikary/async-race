@@ -17,7 +17,6 @@ import {
   createCarAsync, driveCarAsync, getCarsAsync, toggleCarEngineAsync, updateCarAsync,
 } from '../../store/cars/api';
 import { generateRandomCars } from '../../store/cars/helpers';
-import { ApiError } from '../../utils/baseApi';
 
 const CARS_PER_PAGE = 7;
 
@@ -64,28 +63,34 @@ function Garage() {
       })));
 
       const startEngineResults = await Promise.all(startEngineRequests);
+      startEngineResults.forEach(async (res) => {
+        // unwrapResult(res);
+        await dispatch(driveCarAsync(res.meta.arg.id));
 
-      const driveCarRequests = startEngineResults.map(async (result) => {
-        try {
-          unwrapResult(result);
-          return await dispatch(driveCarAsync(result.meta.arg.id));
-        } catch (error) {
-          console.log(`Error driving car with id ${result.meta.arg.id}:`, error);
-
-          console.error(`Error driving car with id ${result.meta.arg.id}:`, error);
-          // Handle specific error (e.g., 500 status code) if needed
-          if (error instanceof ApiError) {
-            console.log('AYOOOOOOOOOOOOOOOOO');
-          }
-          // if (error.statusCode === 500) {
-          //   // Specific handling for 500 errors
-          //   console.error(`Server error (500) for car with id ${result.meta.arg.id}`);
-          // }
-          throw error; // Optionally rethrow to handle it at a higher level if necessary
-        }
+        // unwrapResult(driveReq);
       });
+      // const driveCarRequests = startEngineResults.map(async (result) => {
+      //   try {
+      //     unwrapResult(result);
+      //     const a = await dispatch(driveCarAsync(result.meta.arg.id));
+      //     const b = unwrapResult(a);
+      //   } catch (error) {
+      //     console.log(`Error driving car with id ${result.meta.arg.id}:`, error);
 
-      await Promise.all(driveCarRequests);
+      //     console.log(`Error driving car with id ${result.meta.arg.id}:`, error);
+      //     // Handle specific error (e.g., 500 status code) if needed
+      //     if (error instanceof ApiError) {
+      //       console.log('AYOOOOOOOOOOOOOOOOO');
+      //     }
+      //     // if (error.statusCode === 500) {
+      //     //   // Specific handling for 500 errors
+      //     //   console.error(`Server error (500) for car with id ${result.meta.arg.id}`);
+      //     // }
+      //     throw error; // Optionally rethrow to handle it at a higher level if necessary
+      //   }
+      // });
+
+      // await Promise.all(driveCarRequests);
     } catch (error) {
       console.error('Error starting engines or driving cars:', error);
     }

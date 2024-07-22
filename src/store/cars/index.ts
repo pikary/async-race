@@ -6,12 +6,14 @@ import { generateRandomCars } from './helpers';
 import {
   getCarsAsync, createCarAsync, deleteCarAsync, updateCarAsync,
   toggleCarEngineAsync,
+  driveCarAsync,
 } from './api';
+import { isApiError } from '../../utils/baseApi';
 
-interface CarsSliceState extends SliceState<Car[]|undefined> {
-  currentPage:number,
-  totalAmount:number,
-  selectedCar:Car|null
+interface CarsSliceState extends SliceState<Car[] | undefined> {
+  currentPage: number,
+  totalAmount: number,
+  selectedCar: Car | null
 }
 const initialState: CarsSliceState = {
   isLoading: false,
@@ -26,7 +28,7 @@ const CarsSlice = createSlice({
   name: 'cars',
   initialState,
   reducers: {
-    createCar: (state, action:PayloadAction<Car>) => {
+    createCar: (state, action: PayloadAction<Car>) => {
       state.data?.push(action.payload);
     },
     deleteCar: (state, action: PayloadAction<number>) => {
@@ -42,14 +44,14 @@ const CarsSlice = createSlice({
         state.data = generatedCars;
       }
     },
-    setCurrentPage: (state, action:PayloadAction<number>) => {
+    setCurrentPage: (state, action: PayloadAction<number>) => {
       const maxPages = Math.ceil(state.totalAmount / 7);
       if (action.payload === 0 || action.payload > maxPages) {
         return;
       }
       state.currentPage = action.payload;
     },
-    selectCar: (state, action:PayloadAction<Car>) => {
+    selectCar: (state, action: PayloadAction<Car>) => {
       if (state.selectedCar && state.selectedCar.id === action.payload.id) {
         state.selectedCar = null;
       } else {
@@ -64,6 +66,14 @@ const CarsSlice = createSlice({
     updateSelectedCarColor: (state, action: PayloadAction<string>) => {
       if (state.selectedCar) {
         state.selectedCar.color = action.payload;
+      }
+    },
+    stopCar: (state, action: PayloadAction<number>) => {
+      console.log(action.payload);
+
+      if (state.data) {
+        const car = state.data.find((el) => el.id === action.payload);
+        car!.engineStatus = EngineStatuses.STOPPED;
       }
     },
   },
@@ -152,6 +162,20 @@ const CarsSlice = createSlice({
             state.data[index] = { ...state.data[index], engineStatus: EngineStatuses.STOPPED };
           }
         }
+      })
+      .addCase(driveCarAsync.rejected, (state, action) => {
+        if (isApiError(action.payload)) {
+          if (action.payload.statusCode === 500) {
+            const carId = action.meta.arg;
+            const carIndex = state.data!.findIndex((el) => el.id === carId);
+
+            if (carIndex !== -1) {
+              state.data![carIndex].engineStatus = EngineStatuses.STOPPED;
+              // Instead of logging the car object, you could log other details if needed
+              console.log(`Car with id ${carId} has been stopped due to a server error.`);
+            }
+          }
+        }
       });
   },
 });
@@ -164,6 +188,7 @@ export const {
   selectCar,
   updateSelectedCarColor,
   updateSelectedCarName,
+  stopCar,
 } = CarsSlice.actions;
 
 export default CarsSlice.reducer;

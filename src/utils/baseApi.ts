@@ -10,14 +10,26 @@ interface ApiResponse<ReturnType>{
   statusCode: number;
 }
 
-export class ApiError extends Error {
-  statusCode: number;
+// export class ApiError extends Error {
+//   statusCode: number;
 
-  constructor(message: string, statusCode: number) {
-    super(message);
-    this.name = 'ApiError';
-    this.statusCode = statusCode;
-  }
+//   constructor(message: string, statusCode: number) {
+//     super(message);
+//     this.name = 'ApiError';
+//     this.statusCode = statusCode;
+//   }
+// }
+export interface ApiError extends Error{
+  statusCode:number,
+  message:string
+}
+function ApiErrorFactory(statusCode:number, message:string):ApiError {
+  return {
+    statusCode, message, name: 'a',
+  };
+}
+export function isApiError(error: any): error is ApiError {
+  return error && typeof error.message === 'string' && typeof error.statusCode === 'number' && typeof error.name === 'string';
 }
 
 const baseRequest = async <ReturnType>(
@@ -39,17 +51,20 @@ const baseRequest = async <ReturnType>(
     });
     if (!req.ok) {
       const resbody = await req.text();
-      throw new ApiError(resbody, req.status);
+      throw ApiErrorFactory(req.status, resbody);
     }
     const result = await req.json();
 
     return { data: result, headers: req.headers, statusCode: req.status };
   } catch (e: any) {
-    if (e instanceof ApiError) {
-      console.error(`API Error: ${e.message} (status code: ${e.statusCode})`);
-    } else {
-      console.error(`Unexpected Error: ${e.message}`);
-    }
+    // if (e instanceof ApiError) {
+    //   console.error(`API Error: ${e.message} (status code: ${e.statusCode})`);
+    // } else {
+    //   console.error(`Unexpected Error: ${e.message}`);
+    // }
+    const a = 2;
+    console.log(a);
+
     throw e;
   }
 };
