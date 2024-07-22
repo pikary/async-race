@@ -39,7 +39,6 @@ export const getCarAsync = createAsyncThunk<Car|undefined, number, { rejectValue
 export const createCarAsync = createAsyncThunk<Car|undefined, CarReqBody, { rejectValue: string }>('garage/create', async (reqBody, thunkAPI) => {
   try {
     const result = await baseRequest<Car>('POST', 'garage', reqBody);
-    console.log(result);
 
     return result?.data as Car;
   } catch (e) {

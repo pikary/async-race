@@ -17,6 +17,7 @@ import {
   createCarAsync, driveCarAsync, getCarsAsync, toggleCarEngineAsync, updateCarAsync,
 } from '../../store/cars/api';
 import { generateRandomCars } from '../../store/cars/helpers';
+import { ApiError } from '../../utils/baseApi';
 
 const CARS_PER_PAGE = 7;
 
@@ -56,18 +57,38 @@ function Garage() {
     }
   };
   const handleRaceStart = async () => {
-    const startEngineRequests = data!.map((car) => dispatch(toggleCarEngineAsync({
-      id: car.id!,
-      status: EngineStatuses.STARTED,
-    })));
-    await Promise.all(startEngineRequests).then((values) => {
-      // const driveCarRequests = [];
-      const driveReq = values.map((val) => {
-        unwrapResult(val);
-        return dispatch(driveCarAsync(val.meta.arg.id));
+    try {
+      const startEngineRequests = data!.map((car) => dispatch(toggleCarEngineAsync({
+        id: car.id!,
+        status: EngineStatuses.STARTED,
+      })));
+
+      const startEngineResults = await Promise.all(startEngineRequests);
+
+      const driveCarRequests = startEngineResults.map(async (result) => {
+        try {
+          unwrapResult(result);
+          return await dispatch(driveCarAsync(result.meta.arg.id));
+        } catch (error) {
+          console.log(`Error driving car with id ${result.meta.arg.id}:`, error);
+
+          console.error(`Error driving car with id ${result.meta.arg.id}:`, error);
+          // Handle specific error (e.g., 500 status code) if needed
+          if (error instanceof ApiError) {
+            console.log('AYOOOOOOOOOOOOOOOOO');
+          }
+          // if (error.statusCode === 500) {
+          //   // Specific handling for 500 errors
+          //   console.error(`Server error (500) for car with id ${result.meta.arg.id}`);
+          // }
+          throw error; // Optionally rethrow to handle it at a higher level if necessary
+        }
       });
-      Promise.all(driveReq);
-    });
+
+      await Promise.all(driveCarRequests);
+    } catch (error) {
+      console.error('Error starting engines or driving cars:', error);
+    }
   };
   // const handleGenerateCars = () => {
   //   dispatch(generateCars());
@@ -105,7 +126,6 @@ function Garage() {
       await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
     };
     fetchGarageHandler();
-    console.log(data);
   }, [dispatch, currentPage]);
   const arrows = Array.from({ length: arrowCount }, (_, index) => (
       <Arrow

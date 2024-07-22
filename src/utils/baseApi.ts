@@ -5,8 +5,19 @@ interface Config {
   [key: string]: any;
 }
 interface ApiResponse<ReturnType>{
-  data:ReturnType,
-  headers:Headers
+  data: ReturnType;
+  headers: Headers;
+  statusCode: number;
+}
+
+export class ApiError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.statusCode = statusCode;
+  }
 }
 
 const baseRequest = async <ReturnType>(
@@ -26,18 +37,20 @@ const baseRequest = async <ReturnType>(
       },
       ...config,
     });
-
+    if (!req.ok) {
+      const resbody = await req.text();
+      throw new ApiError(resbody, req.status);
+    }
     const result = await req.json();
 
-    if (!req.ok) {
-      if (req.status === 404) throw new Error('Not found');
-      throw result;
-    }
-    console.log({ data: result, headers: req.headers });
-
-    return { data: result, headers: req.headers };
+    return { data: result, headers: req.headers, statusCode: req.status };
   } catch (e: any) {
-    throw new Error(e);
+    if (e instanceof ApiError) {
+      console.error(`API Error: ${e.message} (status code: ${e.statusCode})`);
+    } else {
+      console.error(`Unexpected Error: ${e.message}`);
+    }
+    throw e;
   }
 };
 

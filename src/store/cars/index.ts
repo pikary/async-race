@@ -23,7 +23,7 @@ const initialState: CarsSliceState = {
 };
 
 const CarsSlice = createSlice({
-  name: 'user',
+  name: 'cars',
   initialState,
   reducers: {
     createCar: (state, action:PayloadAction<Car>) => {
