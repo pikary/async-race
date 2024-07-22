@@ -47,9 +47,6 @@ function Track({ car }:TrackProps) {
 
   const handleSelectCar = (carparam:Car) => { dispatch(selectCar(carparam)); };
   useEffect(() => {
-    console.log('OI CAR DATA UPDATE');
-    console.log(car);
-
     if (car.engineStatus === EngineStatuses.STARTED) {
       const calc = car.distance / car.velocity;
       console.log(calc);
