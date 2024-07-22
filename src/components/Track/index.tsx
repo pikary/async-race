@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Car } from '../../store/cars/types';
+import { Car, EngineStatuses } from '../../store/cars/types';
 import Button from '../../shared/Button';
 import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
 import './styles.scss';
@@ -29,7 +29,7 @@ function Track({ car }:TrackProps) {
       console.error(e);
     }
   };
-  const handleToggleCarEngine = async (status:'started'|'stopped') => {
+  const handleToggleCarEngine = async (status:EngineStatuses) => {
     try {
       if (status === 'stopped') {
         setTime(null);
@@ -38,7 +38,6 @@ function Track({ car }:TrackProps) {
         const data = unwrapResult(await dispatch(toggleCarEngineAsync({ id: car.id!, status })));
         const calc = data.distance / data.velocity;
         setTime(calc);
-
         unwrapResult(await dispatch(driveCarAsync(car.id!)));
       }
     } catch (e) {
@@ -47,6 +46,17 @@ function Track({ car }:TrackProps) {
   };
 
   const handleSelectCar = (carparam:Car) => { dispatch(selectCar(carparam)); };
+  useEffect(() => {
+    console.log('OI CAR DATA UPDATE');
+    console.log(car);
+
+    if (car.engineStatus === EngineStatuses.STARTED) {
+      const calc = car.distance / car.velocity;
+      console.log(calc);
+
+      setTime(calc);
+    }
+  }, [car]);
   return (
       <div className="track">
           <div className="track__car">
@@ -55,8 +65,8 @@ function Track({ car }:TrackProps) {
                   <Button text="REMOVE" color="pink" onClick={() => handleDeleteCar(car.id!)} />
               </div>
               <div className="track__car__btns">
-                  <Button disabled={car.engineStatus === 'started' || car.engineStatus === 'drive'} text="A" color="blue" onClick={() => handleToggleCarEngine('started')} />
-                  <Button disabled={(car.engineStatus && car.engineStatus === 'stopped') || !car.engineStatus} text="B" color="pink" onClick={() => handleToggleCarEngine('stopped')} />
+                  <Button disabled={car.engineStatus === 'started' || car.engineStatus === 'drive'} text="A" color="blue" onClick={() => handleToggleCarEngine(EngineStatuses.STARTED)} />
+                  <Button disabled={(car.engineStatus && car.engineStatus === 'stopped') || !car.engineStatus} text="B" color="pink" onClick={() => handleToggleCarEngine(EngineStatuses.STOPPED)} />
               </div>
               <div>
                   {/* <img src={CarImg} alt="sd" /> */}

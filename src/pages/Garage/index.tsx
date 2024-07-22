@@ -8,12 +8,14 @@ import Button from '../../shared/Button';
 import Input from '../../shared/Input';
 import Arrow from '../../shared/Arrow';
 import Track from '../../components/Track';
-import { Car } from '../../store/cars/types';
+import { Car, createCarWithDefaults, EngineStatuses } from '../../store/cars/types';
 import './styles.scss';
 import {
   setCurrentPage, updateSelectedCarColor, updateSelectedCarName,
 } from '../../store/cars';
-import { createCarAsync, getCarsAsync, updateCarAsync } from '../../store/cars/api';
+import {
+  createCarAsync, driveCarAsync, getCarsAsync, toggleCarEngineAsync, updateCarAsync,
+} from '../../store/cars/api';
 import { generateRandomCars } from '../../store/cars/helpers';
 
 const CARS_PER_PAGE = 7;
@@ -38,7 +40,7 @@ function Garage() {
   const handleCreateCar = async (e:React.FormEvent) => {
     try {
       e.preventDefault();
-      const newCar:Car = { name: carName, color };
+      const newCar:Car = createCarWithDefaults({ name: carName, color });
       await dispatch(createCarAsync(newCar));
     } catch (err) {
       console.error(err);
@@ -52,6 +54,20 @@ function Garage() {
     if (selectedCar) {
       await dispatch(updateCarAsync(selectedCar));
     }
+  };
+  const handleRaceStart = async () => {
+    const startEngineRequests = data!.map((car) => dispatch(toggleCarEngineAsync({
+      id: car.id!,
+      status: EngineStatuses.STARTED,
+    })));
+    await Promise.all(startEngineRequests).then((values) => {
+      // const driveCarRequests = [];
+      const driveReq = values.map((val) => {
+        unwrapResult(val);
+        return dispatch(driveCarAsync(val.meta.arg.id));
+      });
+      Promise.all(driveReq);
+    });
   };
   // const handleGenerateCars = () => {
   //   dispatch(generateCars());
@@ -77,17 +93,13 @@ function Garage() {
   const handleGenerateCars2 = async () => {
     const randomCars = generateRandomCars(100);
     const requests = randomCars.map((car) => dispatch(createCarAsync(car)));
-
     try {
-    // Wait for all requests to complete
-      const results = await Promise.all(requests.map((p) => p.then(unwrapResult).catch((e) => e)));
-
-      // Log the results
-      console.log(results);
+      await Promise.all(requests.map((p) => p.then(unwrapResult).catch((e) => e)));
     } catch (error) {
       console.error('Error generating cars:', error);
     }
   };
+
   useEffect(() => {
     const fetchGarageHandler = async () => {
       await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
@@ -109,9 +121,7 @@ function Garage() {
                   <Button
                     color="blue"
                     type="button"
-                    onClick={() => {
-                      console.log();
-                    }}
+                    onClick={handleRaceStart}
                     icon={<RxUpdate />}
                     text="race"
                   />

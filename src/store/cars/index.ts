@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Car } from './types';
+import { Car, EngineStatuses } from './types';
 import { SliceState } from '../types';
 import { generateRandomCars } from './helpers';
 import {
@@ -136,7 +136,20 @@ const CarsSlice = createSlice({
         if (state.data) {
           const index = state.data.findIndex((car) => car.id === action.meta.arg.id);
           if (index >= 0) {
-            state.data[index] = { ...state.data[index], engineStatus: action.meta.arg.status };
+            state.data[index] = {
+              ...state.data[index],
+              engineStatus: action.meta.arg.status,
+              velocity: action.payload.velocity,
+              distance: action.payload.distance,
+            };
+          }
+        }
+      })
+      .addCase(toggleCarEngineAsync.rejected, (state, action) => {
+        if (state.data) {
+          const index = state.data.findIndex((car) => car.id === action.meta.arg.id);
+          if (index >= 0) {
+            state.data[index] = { ...state.data[index], engineStatus: EngineStatuses.STOPPED };
           }
         }
       });

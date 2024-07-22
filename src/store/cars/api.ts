@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Car } from './types';
+import { Car, EngineStatuses } from './types';
 import baseRequest from '../../utils/baseApi';
 
 interface CarReqBody{
@@ -76,7 +76,7 @@ interface EngineResponse{
   distance:number
 }
 
-export const toggleCarEngineAsync = createAsyncThunk<EngineResponse, {id:number, status:'started'|'stopped'}, { rejectValue: string }>('engine', async (reqBody, thunkAPI) => {
+export const toggleCarEngineAsync = createAsyncThunk<EngineResponse, {id:number, status:EngineStatuses}, { rejectValue: string }>('engine', async (reqBody, thunkAPI) => {
   try {
     const { id, status } = reqBody;
     const result = await baseRequest<EngineResponse>('PATCH', `engine?id=${id}&status=${status}`);

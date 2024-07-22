@@ -1,4 +1,4 @@
-import { Car } from './types';
+import { Car, createCarWithDefaults } from './types';
 
 const getRandomColor = () => {
   const letters = '0123456789ABCDEF';
@@ -18,10 +18,13 @@ const getRandomCarName = () => {
     * models.length)];
 };
 
-const generateRandomCars = (count: number): Car[] => Array.from({ length: count }, (_, id) => ({
-  id,
-  name: getRandomCarName(),
-  color: getRandomColor(),
-}));
+const generateRandomCars = (count: number): Car[] => Array.from(
+  { length: count },
+  (_, id) => (createCarWithDefaults({
+    id,
+    name: getRandomCarName(),
+    color: getRandomColor(),
+  })),
+);
 
 export { generateRandomCars, getRandomCarName, getRandomColor };
