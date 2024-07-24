@@ -11,7 +11,8 @@ import Track from '../../components/Track';
 import { Car, createCarWithDefaults, EngineStatuses } from '../../store/cars/types';
 import './styles.scss';
 import {
-  setCurrentPage, updateSelectedCarColor, updateSelectedCarName,
+  createRace,
+  setCurrentPage, updateCarList, updateSelectedCarColor, updateSelectedCarName,
 } from '../../store/cars';
 import {
   createCarAsync, driveCarAsync, getCarsAsync, toggleCarEngineAsync, updateCarAsync,
@@ -22,7 +23,7 @@ const CARS_PER_PAGE = 7;
 
 function Garage() {
   const {
-    data, currentPage, selectedCar, totalAmount,
+    data, currentPage, selectedCar, totalAmount, race,
   } = useTypedSelector((state) => state.cars);
   const dispatch = useAppDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,6 +58,7 @@ function Garage() {
   };
   const handleRaceStart = async () => {
     try {
+      dispatch(createRace({ currentPage, cars: data || [createCarWithDefaults()] }));
       const startEngineRequests = data!.map((car) => dispatch(toggleCarEngineAsync({
         id: car.id!,
         status: EngineStatuses.STARTED,
@@ -127,10 +129,19 @@ function Garage() {
   };
 
   useEffect(() => {
+    // console.log('SASIHUI');
+
     const fetchGarageHandler = async () => {
       await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
     };
-    fetchGarageHandler();
+    if (currentPage === race?.page) {
+      // console.log('ASDASDASDASDASDASDASDASDASDASDAS');
+      // console.log(race.cars);
+
+      dispatch(updateCarList(race.cars!));
+    } else {
+      fetchGarageHandler();
+    }
   }, [dispatch, currentPage]);
   const arrows = Array.from({ length: arrowCount }, (_, index) => (
       <Arrow

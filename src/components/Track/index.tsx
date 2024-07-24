@@ -1,72 +1,98 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Car, EngineStatuses } from '../../store/cars/types';
 import Button from '../../shared/Button';
-
 import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
 import './styles.scss';
 import { useAppDispatch, useTypedSelector } from '../../store';
-import { selectCar } from '../../store/cars';
-
+import { selectCar, updateCarProgress } from '../../store/cars';
 import {
   deleteCarAsync, getCarsAsync, toggleCarEngineAsync, driveCarAsync,
 } from '../../store/cars/api';
-// eslint-disable-next-line import/no-extraneous-dependencies, import/order
-import { useSpring, animated } from 'react-spring';
 
-interface TrackProps{
-    car:Car
+interface TrackProps {
+  car: Car;
 }
 
-function Track({ car }:TrackProps) {
+function Track({ car }: TrackProps) {
   const { selectedCar, totalAmount, currentPage } = useTypedSelector((state) => state.cars);
-  const thisRef = useRef<SVGSVGElement >(null);
-  // const [position, setPosition] = useState('0%');
-  const [time, setTime] = useState<number|null>(null);
-  const [{ left }, api] = useSpring(() => ({ left: '0px' }));
-
+  const thisRef = useRef<SVGSVGElement>(null);
+  const roadRef = useRef<HTMLDivElement>(null);
+  const animationFrameId = useRef<number | null>(null);
   const dispatch = useAppDispatch();
-  const handleDeleteCar = async (id:number) => {
+
+  const handleDeleteCar = async (id: number) => {
     try {
-      unwrapResult(await dispatch(deleteCarAsync(id)));
-      // update page
+      await dispatch(deleteCarAsync(id)).then(unwrapResult);
       if (totalAmount > 7) {
-        unwrapResult(await dispatch(getCarsAsync({ page: currentPage, limit: 7 })));
+        await dispatch(getCarsAsync({ page: currentPage, limit: 7 })).then(unwrapResult);
       }
     } catch (e) {
       console.error(e);
     }
   };
-  const handleToggleCarEngine = async (status:EngineStatuses) => {
+  const moveCar = () => {
+    const duration = car.distance / car.velocity; // 5 seconds
+    const startPosition = 0;
+    const endPosition = 100 - (100 / roadRef.current!.offsetWidth) * 100;
+    let startTime: number | null = null;
+
+    const animate = (currentTime: number) => {
+      if (startTime === null) startTime = currentTime;
+      const elapsedTime = currentTime - startTime;
+      const percentage = Math.min(elapsedTime / duration, 1);
+      const position = startPosition + (endPosition * percentage);
+      thisRef.current!.style.left = `${position}%`;
+
+      if (percentage < 1) {
+        animationFrameId.current = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrameId.current = requestAnimationFrame(animate);
+  };
+  const handleToggleCarEngine = async (status: EngineStatuses) => {
     try {
-      if (status === 'stopped') {
-        setTime(null);
-        unwrapResult(await dispatch(toggleCarEngineAsync({ id: car.id!, status })));
-      } else {
-        const data = unwrapResult(await dispatch(toggleCarEngineAsync({ id: car.id!, status })));
-        const calc = data.distance / data.velocity;
-        setTime(calc);
-        unwrapResult(await dispatch(driveCarAsync(car.id!)));
+      if (status === EngineStatuses.STOPPED) {
+        cancelAnimationFrame(animationFrameId.current!);
+        await dispatch(toggleCarEngineAsync({ id: car.id!, status })).then(unwrapResult);
+        dispatch(updateCarProgress({ id: car.id, progress: thisRef.current!.style.left }));
+      } else if (status === EngineStatuses.STARTED) {
+        await dispatch(toggleCarEngineAsync({ id: car.id!, status })).then(unwrapResult);
+        moveCar();
+        await dispatch(driveCarAsync(car.id!)).then(unwrapResult);
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  const handleSelectCar = (carparam:Car) => { dispatch(selectCar(carparam)); };
+  const handleSelectCar = (carParam: Car) => {
+    dispatch(selectCar(carParam));
+  };
+
   useEffect(() => {
+    // console.log(car.engineStatus);
+
     if (car.engineStatus === EngineStatuses.STARTED) {
-      const calc = car.distance / car.velocity;
-      setTime(calc);
-      api.start({ left: 'calc(100% - 100px)', config: { duration: 5000 } });
-    } else if (car.engineStatus === EngineStatuses.STOPPED) {
-      if (thisRef.current) {
-        const rect = thisRef.current.getBoundingClientRect();
-        api.start({ left: `${rect.left}px`, immediate: true });
-        setTime(null);
+      moveCar();
+    } else if (car.engineStatus === EngineStatuses.CRASHED
+      || car.engineStatus === EngineStatuses.FINISHED) {
+      cancelAnimationFrame(animationFrameId.current!);
+      console.log(car.progress);
+      if (thisRef.current?.style.left) {
+        dispatch(updateCarProgress({ id: car.id, progress: thisRef.current.style.left }));
       }
     }
-  }, [car, api]);
+    // return () => {
+    //   if (animationFrameId.current) {
+    //     cancelAnimationFrame(animationFrameId.current);
+    //     dispatch(updateCarPr
+    // ogress({ id: car.id, progress: thisRef.current?.style.left || '0%' }));
+    //   }
+    // };
+  }, [car.engineStatus]);
+
   return (
       <div className="track">
           <div className="track__car">
@@ -78,26 +104,16 @@ function Track({ car }:TrackProps) {
                   <Button disabled={car.engineStatus === 'started' || car.engineStatus === 'drive'} text="A" color="blue" onClick={() => handleToggleCarEngine(EngineStatuses.STARTED)} />
                   <Button disabled={(car.engineStatus && car.engineStatus === 'stopped') || !car.engineStatus} text="B" color="pink" onClick={() => handleToggleCarEngine(EngineStatuses.STOPPED)} />
               </div>
-              <div>
-                  {/* <img src={CarImg} alt="sd" /> */}
-              </div>
           </div>
-          <div className="track__road">
-              <animated.div
+          <div className="track__road" ref={roadRef}>
+              <CarImg
+                ref={thisRef}
                 className="track__road__car"
-                style={{
-                  position: 'absolute',
-                  left,
-                }}
-              >
-                  <CarImg
-                    ref={thisRef}
-                    fill={car.color}
-                    width={100}
-                    height={80}
-                  />
-              </animated.div>
-              {/* <h3 className="track__road__carname">{car.name}</h3> */}
+                style={{ left: `${(car.engineStatus === EngineStatuses.FINISHED || car.engineStatus === EngineStatuses.CRASHED) ? car.progress : ''}` }}
+                fill={car.color}
+                width={100}
+                height={80}
+              />
           </div>
       </div>
   );

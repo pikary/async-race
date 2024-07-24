@@ -4,7 +4,9 @@ export type EngineStatus = 'started' | 'stopped' | 'drive'
 export enum EngineStatuses{
   STARTED='started',
   STOPPED='stopped',
-  DRIVE='drive'
+  CRASHED='crashed',
+  DRIVE='drive',
+  FINISHED='finished'
 }
 export interface Car{
   name:string,
@@ -12,7 +14,14 @@ export interface Car{
   id:number,
   velocity:number,
   distance:number,
-  engineStatus:EngineStatuses
+  engineStatus:EngineStatuses,
+  progress:string|null,
+}
+
+export interface Race{
+  cars:Car[],
+  status:string,
+  page: number
 }
 
 const defaultCar: Car = {
@@ -21,6 +30,7 @@ const defaultCar: Car = {
   id: 0,
   velocity: 0,
   distance: 0,
+  progress: null,
   engineStatus: EngineStatuses.STOPPED,
 };
 

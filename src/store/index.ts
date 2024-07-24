@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import CarsReducer from './cars';
 
 const rootReducer = combineReducers({ cars: CarsReducer });

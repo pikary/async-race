@@ -18,6 +18,8 @@ export const getCarsAsync = createAsyncThunk<GetGarageResponse, { page: number, 
     // get total items cound from header
     if (result) {
       const { headers, data } = result!;
+      // (data);
+
       const totalCount = headers.get('X-Total-Count');
       return { cars: data, totalCount: +totalCount! } as GetGarageResponse;
     }
@@ -79,6 +81,7 @@ export const toggleCarEngineAsync = createAsyncThunk<EngineResponse, {id:number,
   try {
     const { id, status } = reqBody;
     const result = await baseRequest<EngineResponse>('PATCH', `engine?id=${id}&status=${status}`);
+
     return result?.data as EngineResponse;
   } catch (e) {
     // @ts-ignore

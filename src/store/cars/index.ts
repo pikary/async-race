@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Car, EngineStatuses } from './types';
+import { Car, EngineStatuses, Race } from './types';
 import { SliceState } from '../types';
 import { generateRandomCars } from './helpers';
 import {
@@ -13,7 +13,8 @@ import { isApiError } from '../../utils/baseApi';
 interface CarsSliceState extends SliceState<Car[] | undefined> {
   currentPage: number,
   totalAmount: number,
-  selectedCar: Car | null
+  selectedCar: Car | null,
+  race: Race | null
 }
 const initialState: CarsSliceState = {
   isLoading: false,
@@ -22,6 +23,7 @@ const initialState: CarsSliceState = {
   currentPage: 1,
   totalAmount: 0,
   selectedCar: null,
+  race: null,
 };
 
 const CarsSlice = createSlice({
@@ -68,13 +70,32 @@ const CarsSlice = createSlice({
         state.selectedCar.color = action.payload;
       }
     },
+    updateCarProgress: (state, action: PayloadAction<{ id: number, progress: string }>) => {
+      const car = state.race?.cars.find((el) => el.id === action.payload.id);
+      // console.log('I AM UPDATING');
+
+      if (car) {
+        car.progress = action.payload.progress;
+      }
+    },
     stopCar: (state, action: PayloadAction<number>) => {
-      console.log(action.payload);
+      // console.log(action.payload);
 
       if (state.data) {
         const car = state.data.find((el) => el.id === action.payload);
         car!.engineStatus = EngineStatuses.STOPPED;
       }
+    },
+    createRace: (state, action: PayloadAction<{ currentPage: number, cars: Car[] }>) => {
+      state.race = {
+        page: action.payload.currentPage,
+        cars: action.payload.cars,
+        status: 'started',
+      };
+      // console.log(state.race);
+    },
+    updateCarList: (state, action: PayloadAction<Car[]>) => {
+      state.data = action.payload;
     },
   },
   extraReducers(builder) {
@@ -168,12 +189,31 @@ const CarsSlice = createSlice({
           if (action.payload.statusCode === 500) {
             const carId = action.meta.arg;
             const carIndex = state.data!.findIndex((el) => el.id === carId);
-
+            // const carToUpd = state.race?.cars.find((el) => el.id === carId);
+            // if (carToUpd) carToUpd.engineStatus = EngineStatuses.FINISHED;
             if (carIndex !== -1) {
-              state.data![carIndex].engineStatus = EngineStatuses.STOPPED;
+              state.data![carIndex].engineStatus = EngineStatuses.CRASHED;
+              state.race!.cars![carIndex].engineStatus = EngineStatuses.CRASHED;
               // Instead of logging the car object, you could log other details if needed
-              console.log(`Car with id ${carId} has been stopped due to a server error.`);
+              // console.log(`Car with id ${carId} has been stopped due to a server error.`);
             }
+          }
+        }
+      })
+      .addCase(driveCarAsync.fulfilled, (state, action) => {
+        if (action.payload.success === true) {
+          const carId = action.meta.arg;
+          const carIndex = state.data!.findIndex((el) => el.id === carId);
+          // const carToUpd = state.race?.cars.find((el) => el.id === carId);
+          // if (carToUpd) carToUpd.engineStatus = EngineStatuses.FINISHED;
+          if (carIndex !== -1) {
+            state.data![carIndex].engineStatus = EngineStatuses.FINISHED;
+            const carToUpd = state.race?.cars[carIndex];
+            carToUpd!.engineStatus = EngineStatuses.FINISHED;
+            // const racecar = state.race!.cars.get(carId);
+            // if (racecar)racecar.engineStatus = EngineStatuses.FINISHED;
+            // Instead of logging the car object, you could log other details if needed
+            // console.log(`Car with id ${carId} has finished yaaay`);
           }
         }
       });
@@ -189,6 +229,9 @@ export const {
   updateSelectedCarColor,
   updateSelectedCarName,
   stopCar,
+  updateCarProgress,
+  createRace,
+  updateCarList,
 } = CarsSlice.actions;
 
 export default CarsSlice.reducer;
