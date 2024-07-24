@@ -109,13 +109,20 @@ function Garage() {
     dispatch(setCurrentPage(currentPage - 1));
   };
   useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      const containerWidth = container.clientWidth;
-      const arrowWidth = 30; // 20 + флекс гап 10
-      const numberOfArrows = Math.floor(containerWidth / arrowWidth);
-      setArrowCount(numberOfArrows);
-    }
+    const handleResize = () => {
+      const container = containerRef.current;
+      if (container) {
+        const containerWidth = container.clientWidth;
+        const arrowWidth = 30; // 20 + флекс гап 10
+        const numberOfArrows = Math.floor(containerWidth / arrowWidth);
+        setArrowCount(numberOfArrows - 1);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    // Cleanup function to remove the event listener
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const handleGenerateCars2 = async () => {

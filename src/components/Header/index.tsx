@@ -33,14 +33,16 @@ function Header() {
               />
           </div>
           <div className="header__arrows">
-              <Arrow size="normal" color="pink" />
-              <Arrow size="normal" color="pink" />
-              <Arrow size="normal" color="pink" />
-              <Arrow size="normal" color="pink" />
-              <Arrow size="normal" color="pink" />
-              <Arrow size="normal" color="pink" />
-              <Arrow size="normal" color="pink" />
-              <Arrow size="normal" color="pink" />
+              <Arrow size="small" color="pink" />
+              <Arrow size="small" color="pink" />
+              <Arrow size="small" color="pink" />
+              <Arrow size="small" color="pink" />
+              <Arrow size="small" color="pink" />
+              <Arrow size="small" color="pink" />
+              <Arrow size="small" color="pink" />
+              <Arrow size="small" color="pink" />
+
+              <Arrow size="small" color="pink" />
           </div>
           <div className="header__logo">
               <div className="header__logo__container">
@@ -58,14 +60,16 @@ function Header() {
 
           </div>
           <div className="header__arrows">
-              <Arrow size="normal" color="blue" />
-              <Arrow size="normal" color="blue" />
-              <Arrow size="normal" color="blue" />
-              <Arrow size="normal" color="blue" />
-              <Arrow size="normal" color="blue" />
-              <Arrow size="normal" color="blue" />
-              <Arrow size="normal" color="blue" />
-              <Arrow size="normal" color="blue" />
+              <Arrow size="small" color="blue" />
+              <Arrow size="small" color="blue" />
+              <Arrow size="small" color="blue" />
+              <Arrow size="small" color="blue" />
+              <Arrow size="small" color="blue" />
+              <Arrow size="small" color="blue" />
+              <Arrow size="small" color="blue" />
+              <Arrow size="small" color="blue" />
+
+              <Arrow size="small" color="blue" />
           </div>
       </header>
   );

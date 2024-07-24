@@ -10,6 +10,7 @@ import Header from './components/Header';
 import { EngineStatuses } from './store/cars/types';
 import WinnerBanner from './components/WinnerBanner';
 import { createWinnerAsync, updateWinnerAsync } from './store/winners/api';
+import Footer from './components/Footer';
 
 function App() {
   const { data: cars } = useTypedSelector((state) => state.cars);
@@ -64,6 +65,7 @@ function App() {
               />
               )}
           </main>
+          <Footer />
 
       </div>
   );
