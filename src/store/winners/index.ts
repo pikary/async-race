@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Winner } from './types';
+import { OrderTypes, SortTypes, Winner } from './types';
 import { SliceState } from '../types';
 import { getWinnersAsync, updateWinnerAsync, createWinnerAsync } from './api';
 import { isApiError } from '../../utils/baseApi';
@@ -8,6 +8,8 @@ import { isApiError } from '../../utils/baseApi';
 interface WinnersSliceState extends SliceState<Winner[]|undefined> {
   currentPage:number,
   totalAmount:number,
+  sort:SortTypes,
+  order:OrderTypes
 }
 const initialState: WinnersSliceState = {
   isLoading: false,
@@ -15,6 +17,8 @@ const initialState: WinnersSliceState = {
   error: undefined,
   currentPage: 1,
   totalAmount: 0,
+  order: OrderTypes.ASC,
+  sort: SortTypes.ID,
 };
 
 const WinnerSlice = createSlice({
@@ -27,6 +31,16 @@ const WinnerSlice = createSlice({
         return;
       }
       state.currentPage = action.payload;
+    },
+    setSortType: (state, action:PayloadAction<SortTypes>) => {
+      state.sort = action.payload;
+    },
+    setOrderType: (state, action:PayloadAction<OrderTypes>) => {
+      state.order = action.payload;
+    },
+    setTableFilters: (state, action:PayloadAction<{order:OrderTypes, sort:SortTypes}>) => {
+      state.sort = action.payload.sort;
+      state.order = action.payload.order;
     },
   },
   extraReducers(builder) {
@@ -77,6 +91,8 @@ const WinnerSlice = createSlice({
 
 });
 
-export const { setCurrentPage } = WinnerSlice.actions;
+export const {
+  setCurrentPage, setOrderType, setSortType, setTableFilters,
+} = WinnerSlice.actions;
 
 export default WinnerSlice.reducer;

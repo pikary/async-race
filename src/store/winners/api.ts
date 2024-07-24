@@ -9,7 +9,7 @@ interface GetWinnersResponse{
 }
 export const getWinnersAsync = createAsyncThunk<GetWinnersResponse, { page: number, limit: number, sort:SortTypes, order:OrderTypes }, { rejectValue: string }>('winners/get', async (reqBody, thunkAPI) => {
   try {
-    const result = await baseRequest<Winner[]>('GET', `winners?_page=${reqBody.page}&_limit=${reqBody.limit}`);
+    const result = await baseRequest<Winner[]>('GET', `winners?_page=${reqBody.page}&_limit=${reqBody.limit}&_sort=${reqBody.sort}&_order=${reqBody.order}`);
 
     // get total items cound from header
     if (result) {
@@ -20,6 +20,8 @@ export const getWinnersAsync = createAsyncThunk<GetWinnersResponse, { page: numb
         const carResult = await baseRequest<Car>('GET', `garage/${winner?.id}`);
         return { ...winner, car: carResult?.data };
       }));
+      console.log(result.data);
+
       return { winners: winnersWithCars, totalCount: +totalCount! } as GetWinnersResponse;
     }
     return thunkAPI.rejectWithValue('No winners found');

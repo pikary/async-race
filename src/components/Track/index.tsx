@@ -98,7 +98,7 @@ function Track({ car }: TrackProps) {
           <div className="track__car">
               <div className="track__car__btns">
                   <Button text="SELECT" color="blue" onClick={() => handleSelectCar(car)} className={`${selectedCar?.id === car.id ? 'track__car__btns-selected' : ''}`} />
-                  <Button text="REMOVE" color="pink" onClick={() => handleDeleteCar(car.id!)} />
+                  <Button text="REMOVE" color="pink" onClick={() => handleDeleteCar(car.id!)} disabled={car.engineStatus === EngineStatuses.STARTED} />
               </div>
               <div className="track__car__btns">
                   <Button disabled={car.engineStatus === 'started' || car.engineStatus === 'drive'} text="A" color="blue" onClick={() => handleToggleCarEngine(EngineStatuses.STARTED)} />
