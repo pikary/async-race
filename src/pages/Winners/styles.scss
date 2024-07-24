@@ -29,8 +29,18 @@
                 position: relative;
                 padding: 15px 10px;
                 text-align: start;
-                letter-spacing: 0.1rem;
-                font-size: var(--font-size-m);
+               
+                &__wrapper{
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    // gap: 50%;
+                    span{
+                        letter-spacing: 0.1rem;
+                        font-size: var(--font-size-m);
+                    }
+                }
+               
             }
             &__text::after{
                 content: '';

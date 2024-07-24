@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Winner } from './types';
 import { SliceState } from '../types';
 import { getWinnersAsync, updateWinnerAsync, createWinnerAsync } from './api';
@@ -21,10 +21,16 @@ const WinnerSlice = createSlice({
   name: 'winners',
   initialState,
   reducers: {
-
+    setCurrentPage: (state, action:PayloadAction<number>) => {
+      const maxPages = Math.ceil(state.totalAmount / 7);
+      if (action.payload === 0 || action.payload > maxPages) {
+        return;
+      }
+      state.currentPage = action.payload;
+    },
   },
   extraReducers(builder) {
-    builder.addCase(getWinnersAsync.pending, (state, action) => {
+    builder.addCase(getWinnersAsync.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(getWinnersAsync.rejected, (state, action) => {
@@ -36,7 +42,7 @@ const WinnerSlice = createSlice({
       state.data = action.payload.winners;
       state.totalAmount = action.payload.totalCount;
     });
-    builder.addCase(createWinnerAsync.pending, (state, action) => {
+    builder.addCase(createWinnerAsync.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(createWinnerAsync.rejected, (state, action) => {
@@ -50,7 +56,7 @@ const WinnerSlice = createSlice({
         state.data.push(action.payload);
       }
     });
-    builder.addCase(updateWinnerAsync.pending, (state, action) => {
+    builder.addCase(updateWinnerAsync.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(updateWinnerAsync.rejected, (state, action) => {
@@ -71,6 +77,6 @@ const WinnerSlice = createSlice({
 
 });
 
-// export const {} = CarsSlice.actions;
+export const { setCurrentPage } = WinnerSlice.actions;
 
 export default WinnerSlice.reducer;

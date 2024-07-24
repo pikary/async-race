@@ -207,7 +207,7 @@ function Garage() {
                       )
                   </h4>
                   <div className="garage__race__pagination__controls">
-                      <Button className="garage__race__pagination__controls__btn disabled" text="" onClick={handlePreviousPage} icon={<BiLeftArrow size={25} />} />
+                      <Button className="garage__race__pagination__controls__btn" text="" onClick={handlePreviousPage} icon={<BiLeftArrow size={25} />} />
                       <h4>
                           PAGE #
                           {currentPage}

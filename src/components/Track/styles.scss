@@ -87,12 +87,12 @@
         &__carname {
             position: absolute;
             top: 50%;
+            left: 15%;
             transform: translateY(-50%);
-            left: 50px;
+            // left: 50px;
             font-size: var(--font-size-xl);
             font-weight: 400;
             color: gray;
-
             letter-spacing: 0.1rem;
             user-select: none;
         }

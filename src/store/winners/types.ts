@@ -1,9 +1,13 @@
 /* eslint-disable no-unused-vars */
+
+import { Car } from '../cars/types';
+
 /* eslint-disable no-shadow */
 export interface Winner{
     id:number,
     wins:number,
-    time:number
+    time:string,
+    car?:Car
 }
 
 export enum OrderTypes {
@@ -19,6 +23,6 @@ export enum SortTypes {
 
 export function createDefaultWinner(overrides:Partial<Winner>):Winner {
   return {
-    id: 0, wins: 0, time: 0, ...overrides,
+    id: 0, wins: 0, time: '', ...overrides,
   };
 }

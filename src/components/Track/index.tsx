@@ -114,6 +114,9 @@ function Track({ car }: TrackProps) {
                 width={100}
                 height={80}
               />
+              <h3 className="track__road__carname">
+                  {car.name}
+              </h3>
           </div>
       </div>
   );

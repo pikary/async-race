@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import baseRequest, { ApiError, isApiError } from '../../utils/baseApi';
 import { OrderTypes, SortTypes, Winner } from './types';
+import { Car } from '../cars/types';
 
 interface GetWinnersResponse{
   winners: Winner[],
@@ -14,7 +15,12 @@ export const getWinnersAsync = createAsyncThunk<GetWinnersResponse, { page: numb
     if (result) {
       const { headers, data } = result!;
       const totalCount = headers.get('X-Total-Count');
-      return { winners: data, totalCount: +totalCount! } as GetWinnersResponse;
+      const winnersWithCars = await Promise.all(data.map(async (winner) => {
+        // const winnerResult = await baseRequest<Winner>('GET', `winners/${winner.id}`);
+        const carResult = await baseRequest<Car>('GET', `garage/${winner?.id}`);
+        return { ...winner, car: carResult?.data };
+      }));
+      return { winners: winnersWithCars, totalCount: +totalCount! } as GetWinnersResponse;
     }
     return thunkAPI.rejectWithValue('No winners found');
   } catch (e) {
@@ -41,7 +47,7 @@ export const createWinnerAsync = createAsyncThunk<Winner, Winner, {rejectValue:A
 );
 
 export const updateWinnerAsync = createAsyncThunk<Winner, Winner, {rejectValue:string | ApiError}>(
-  'winners/create',
+  'winners/update',
   async (reqbody, thunkAPI) => {
     try {
       const result = await baseRequest<Winner>('PUT', `winners/${reqbody.id}`, reqbody);
