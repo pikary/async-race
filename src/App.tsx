@@ -44,12 +44,11 @@ function App() {
       }
     }
   }, [dispatch, winner]);
-  const basename = process.env.PUBLIC_URL;
 
   return (
       <div className="App">
           <main>
-              <BrowserRouter basename={basename}>
+              <BrowserRouter>
                   <Header />
                   <Routes>
                       <Route path="/garage" element={<Garage />} />
