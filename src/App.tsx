@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {
+  BrowserRouter, Route, Routes, Navigate,
+} from 'react-router-dom';
 import useFindWinner from './hooks/useFindWInner';
 import { useAppDispatch, useTypedSelector } from './store';
 import Garage from './pages/Garage';
@@ -42,14 +44,17 @@ function App() {
       }
     }
   }, [dispatch, winner]);
+  const basename = process.env.PUBLIC_URL;
+
   return (
       <div className="App">
           <main>
-              <BrowserRouter>
+              <BrowserRouter basename={basename}>
                   <Header />
                   <Routes>
                       <Route path="/garage" element={<Garage />} />
                       <Route path="/winners" element={<Winners />} />
+                      <Route path="/" element={<Navigate to="/garage" />} />
                   </Routes>
               </BrowserRouter>
               {winner && (

@@ -10,7 +10,7 @@ import './styles.scss';
 function Header() {
   const navigate = useNavigate();
   const navigateTo = (route:string) => {
-    navigate(route);
+    navigate(`/${route}`);
   };
   return (
       <header className="header">
