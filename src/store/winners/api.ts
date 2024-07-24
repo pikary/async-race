@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import baseRequest, { ApiError } from '../../utils/baseApi';
+import baseRequest, { ApiError, isApiError } from '../../utils/baseApi';
 import { OrderTypes, SortTypes, Winner } from './types';
 
 interface GetWinnersResponse{
@@ -21,6 +21,42 @@ export const getWinnersAsync = createAsyncThunk<GetWinnersResponse, { page: numb
     return thunkAPI.rejectWithValue((e as Error).message);
   }
 });
+
+export const createWinnerAsync = createAsyncThunk<Winner, Winner, {rejectValue:ApiError|string}>(
+  'winners/create',
+  async (reqbody, thunkAPI) => {
+    try {
+      const result = await baseRequest<Winner>('POST', 'winners', reqbody);
+      if (result) {
+        return result.data;
+      }
+      return thunkAPI.rejectWithValue('asd');
+    } catch (e) {
+      if (isApiError(e)) {
+        return thunkAPI.rejectWithValue({ statusCode: e.statusCode, message: e.message, name: '' });
+      }
+      return thunkAPI.rejectWithValue((e as Error).message);
+    }
+  },
+);
+
+export const updateWinnerAsync = createAsyncThunk<Winner, Winner, {rejectValue:string | ApiError}>(
+  'winners/create',
+  async (reqbody, thunkAPI) => {
+    try {
+      const result = await baseRequest<Winner>('PUT', `winners/${reqbody.id}`, reqbody);
+      if (result) {
+        return result.data;
+      }
+      return thunkAPI.rejectWithValue('asd');
+    } catch (e) {
+      if (isApiError(e)) {
+        return thunkAPI.rejectWithValue({ statusCode: e.statusCode, message: e.message, name: '' });
+      }
+      return thunkAPI.rejectWithValue((e as Error).message);
+    }
+  },
+);
 
 export const a = 2;
 export {};

@@ -16,3 +16,9 @@ export enum SortTypes {
     WIN='wins',
     TIME='time'
 }
+
+export function createDefaultWinner(overrides:Partial<Winner>):Winner {
+  return {
+    id: 0, wins: 0, time: 0, ...overrides,
+  };
+}
