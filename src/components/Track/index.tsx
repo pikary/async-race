@@ -42,7 +42,9 @@ function Track({ car }: TrackProps) {
       const elapsedTime = currentTime - startTime;
       const percentage = Math.min(elapsedTime / duration, 1);
       const position = startPosition + (endPosition * percentage);
-      thisRef.current!.style.left = `${position}%`;
+      if (thisRef.current) {
+        thisRef.current.style.left = `${position}%`;
+      }
 
       if (percentage < 1) {
         animationFrameId.current = requestAnimationFrame(animate);
@@ -92,7 +94,15 @@ function Track({ car }: TrackProps) {
     //   }
     // };
   }, [car.engineStatus]);
-
+  const getCarLeftPosition = (engineStatus:EngineStatuses) => {
+    if (engineStatus === EngineStatuses.CRASHED) {
+      return car.progress || '';
+    }
+    if (engineStatus === EngineStatuses.FINISHED) {
+      return 'calc(100% - 100px)';
+    }
+    return '';
+  };
   return (
       <div className="track">
           <div className="track__car">
@@ -109,7 +119,9 @@ function Track({ car }: TrackProps) {
               <CarImg
                 ref={thisRef}
                 className="track__road__car"
-                style={{ left: `${(car.engineStatus === EngineStatuses.FINISHED || car.engineStatus === EngineStatuses.CRASHED) ? car.progress : ''}` }}
+                style={{
+                  left: getCarLeftPosition(car.engineStatus),
+                }}
                 fill={car.color}
                 width={100}
                 height={80}
