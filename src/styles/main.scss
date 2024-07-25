@@ -29,6 +29,13 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
 }
+
+@media screen and (max-width:768px){
+  html{
+    font-size: 13px;
+  }
+  
+}
 //70px - navbar height
 
 :root {

@@ -12,7 +12,7 @@ import { Car, createCarWithDefaults, EngineStatuses } from '../../store/cars/typ
 import './styles.scss';
 import {
   createRace,
-  setCurrentPage, updateCarList, updateSelectedCarColor, updateSelectedCarName,
+  setCurrentPage, updateCarList, updateSelectedCarColor, updateSelectedCarName, updateCarProgress,
 } from '../../store/cars';
 import {
   createCarAsync, driveCarAsync, getCarsAsync, toggleCarEngineAsync, updateCarAsync,
@@ -71,30 +71,10 @@ function Garage() {
 
         // unwrapResult(driveReq);
       });
-      // const driveCarRequests = startEngineResults.map(async (result) => {
-      //   try {
-      //     unwrapResult(result);
-      //     const a = await dispatch(driveCarAsync(result.meta.arg.id));
-      //     const b = unwrapResult(a);
-      //   } catch (error) {
-      //     console.log(`Error driving car with id ${result.meta.arg.id}:`, error);
-
-      //     console.log(`Error driving car with id ${result.meta.arg.id}:`, error);
-      //     // Handle specific error (e.g., 500 status code) if needed
-      //     if (error instanceof ApiError) {
-      //       console.log('AYOOOOOOOOOOOOOOOOO');
-      //     }
-      //     // if (error.statusCode === 500) {
-      //     //   // Specific handling for 500 errors
-      //     //   console.error(`Server error (500) for car with id ${result.meta.arg.id}`);
-      //     // }
-      //     throw error; // Optionally rethrow to handle it at a higher level if necessary
-      //   }
-      // });
 
       // await Promise.all(driveCarRequests);
     } catch (error) {
-      console.error('Error starting engines or driving cars:', error);
+      console.log('Error starting engines or driving cars:', error);
     }
   };
   // const handleGenerateCars = () => {
@@ -150,6 +130,20 @@ function Garage() {
       fetchGarageHandler();
     }
   }, [dispatch, currentPage]);
+  const handleReset = async () => {
+    try {
+      // dispatch(updateRaceStatus('finished'));
+      const requests = data!.map(
+        (car) => dispatch(toggleCarEngineAsync({
+          id: car.id,
+          status: EngineStatuses.STOPPED,
+        })),
+      );
+      await Promise.all(requests);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const arrows = Array.from({ length: arrowCount }, (_, index) => (
       <Arrow
         key={index}
@@ -165,16 +159,15 @@ function Garage() {
                     color="blue"
                     type="button"
                     onClick={handleRaceStart}
-                    icon={<RxUpdate />}
+                    icon={<FaPlay />}
+                    disabled={race?.status === 'started'}
                     text="race"
                   />
                   <Button
                     color="pink"
                     type="button"
-                    onClick={() => {
-                      console.log();
-                    }}
-                    icon={<FaPlay />}
+                    onClick={handleReset}
+                    icon={<RxUpdate />}
                     text="reset"
                   />
               </div>

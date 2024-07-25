@@ -21,7 +21,8 @@ export interface Car{
 export interface Race{
   cars:Car[],
   status:string,
-  page: number
+  page: number,
+  winner:Car|null
 }
 
 const defaultCar: Car = {

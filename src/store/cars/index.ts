@@ -8,13 +8,13 @@ import {
   toggleCarEngineAsync,
   driveCarAsync,
 } from './api';
-import { isApiError } from '../../utils/baseApi';
+import { isAbortError, isApiError } from '../../utils/baseApi';
 
 interface CarsSliceState extends SliceState<Car[] | undefined> {
   currentPage: number,
   totalAmount: number,
   selectedCar: Car | null,
-  race: Race | null
+  race: Race
 }
 const initialState: CarsSliceState = {
   isLoading: false,
@@ -23,7 +23,12 @@ const initialState: CarsSliceState = {
   currentPage: 1,
   totalAmount: 0,
   selectedCar: null,
-  race: null,
+  race: {
+    cars: [],
+    status: 'idle',
+    page: 0,
+    winner: null,
+  },
 };
 
 const CarsSlice = createSlice({
@@ -91,8 +96,20 @@ const CarsSlice = createSlice({
         page: action.payload.currentPage,
         cars: action.payload.cars,
         status: 'started',
+        winner: null,
       };
       // console.log(state.race);
+    },
+    updateRaceParticipants: (state, action:PayloadAction<{car:Car}>) => {
+      state.race.cars.push(action.payload.car);
+    },
+    updateRaceStatus: (state, action:PayloadAction<string>) => {
+      state.race.status = action.payload;
+      state.data = state.data?.map((car) => {
+        car.engineStatus = EngineStatuses.STOPPED;
+        car.progress = '0';
+        return car;
+      });
     },
     updateCarList: (state, action: PayloadAction<Car[]>) => {
       state.data = action.payload;
@@ -170,9 +187,15 @@ const CarsSlice = createSlice({
             state.data[index] = {
               ...state.data[index],
               engineStatus: action.meta.arg.status,
-              velocity: action.payload.velocity,
-              distance: action.payload.distance,
+              velocity: action.payload?.velocity,
+              distance: action.payload?.distance,
             };
+            console.log(state.data[index]);
+
+            // console.log('adasd');
+
+            // state.race?.cars.push(state.data[index]);
+            // console.log(state.race?.cars);
           }
         }
       })
@@ -185,17 +208,22 @@ const CarsSlice = createSlice({
         }
       })
       .addCase(driveCarAsync.rejected, (state, action) => {
-        if (isApiError(action.payload)) {
+        const carId = action.meta.arg;
+
+        if (isAbortError(action.payload)) {
+          console.log('ITS ABORT ERRRO AYE', action.payload, carId);
+
+          const carIndex = state.data!.findIndex((el) => el.id === carId);
+          if (carIndex !== -1) {
+            state.data![carIndex].engineStatus = EngineStatuses.STOPPED;
+            state.race!.cars![carIndex].engineStatus = EngineStatuses.STOPPED;
+          }
+        } else if (isApiError(action.payload)) {
           if (action.payload.statusCode === 500) {
-            const carId = action.meta.arg;
             const carIndex = state.data!.findIndex((el) => el.id === carId);
-            // const carToUpd = state.race?.cars.find((el) => el.id === carId);
-            // if (carToUpd) carToUpd.engineStatus = EngineStatuses.FINISHED;
             if (carIndex !== -1) {
               state.data![carIndex].engineStatus = EngineStatuses.CRASHED;
               state.race!.cars![carIndex].engineStatus = EngineStatuses.CRASHED;
-              // Instead of logging the car object, you could log other details if needed
-              // console.log(`Car with id ${carId} has been stopped due to a server error.`);
             }
           }
         }
@@ -232,6 +260,8 @@ export const {
   updateCarProgress,
   createRace,
   updateCarList,
+  updateRaceStatus,
+  updateRaceParticipants,
 } = CarsSlice.actions;
 
 export default CarsSlice.reducer;

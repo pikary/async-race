@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Car, EngineStatuses } from './types';
-import baseRequest, { ApiError, isApiError } from '../../utils/baseApi';
+import baseRequest, { AbortError, ApiError, isApiError } from '../../utils/baseApi';
 
 interface CarReqBody{
   name:string,
   color:string
 }
-
+const controllers = new Map<number, AbortController>();
 interface GetGarageResponse{
   cars:Car[],
   totalCount:number
@@ -80,12 +80,25 @@ interface EngineResponse{
 export const toggleCarEngineAsync = createAsyncThunk<EngineResponse, {id:number, status:EngineStatuses}, { rejectValue: string }>('engine', async (reqBody, thunkAPI) => {
   try {
     const { id, status } = reqBody;
-    const result = await baseRequest<EngineResponse>('PATCH', `engine?id=${id}&status=${status}`);
+    let controller = controllers.get(id);
+    if (status === EngineStatuses.STARTED) {
+      const newController = new AbortController();
+      controllers.set(id, newController);
+      controller = newController;
+    }
+    if (status === EngineStatuses.STOPPED && controller) {
+      controller?.abort();
+      const result = await baseRequest<EngineResponse>('PATCH', `engine?id=${id}&status=${status}`, null, { });
+      controllers.delete(id);
+
+      return result?.data as EngineResponse;
+    }
+    const result = await baseRequest<EngineResponse>('PATCH', `engine?id=${id}&status=${status}`, null, { });
 
     return result?.data as EngineResponse;
   } catch (e) {
     // @ts-ignore
-    console.log(e);
+    // console.log(e);
 
     return thunkAPI.rejectWithValue((e as Error).message);
   }
@@ -94,14 +107,23 @@ export const toggleCarEngineAsync = createAsyncThunk<EngineResponse, {id:number,
 interface DriveCarResponse{
   success:boolean
 }
-export const driveCarAsync = createAsyncThunk<DriveCarResponse, number, { rejectValue: ApiError|string }>('drive_engine', async (id, thunkAPI) => {
+export const driveCarAsync = createAsyncThunk<DriveCarResponse, number, { rejectValue: ApiError|AbortError|string }>('drive_engine', async (id, thunkAPI) => {
   try {
-    const result = await baseRequest<{success:boolean}>('PATCH', `engine?id=${id}&status=drive`);
+    const controller = controllers.get(id);
+
+    const result = await baseRequest<{success:boolean}>('PATCH', `engine?id=${id}&status=drive`, null, { signal: controller?.signal });
+
     return result?.data as DriveCarResponse;
-  } catch (e) {
+  } catch (e:any) {
+    if ((e as Error).name === 'AbortError') {
+      console.log('Request was aborted');
+      return thunkAPI.rejectWithValue({ id, message: `Car ${id} was stopped while racing`, name: 'AbortError' });
+    }
+
     if (isApiError(e)) {
       return thunkAPI.rejectWithValue({ statusCode: e.statusCode, message: e.message, name: '' });
     }
+
     // console.log(e);
     return thunkAPI.rejectWithValue((e as Error).message);
   }

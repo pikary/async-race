@@ -2,6 +2,7 @@ const API_URL = 'http://127.0.0.1:3000';
 
 interface Config {
   headers?: Record<string, string>;
+  signal?: AbortSignal;
   [key: string]: any;
 }
 interface ApiResponse<ReturnType>{
@@ -32,6 +33,19 @@ export function isApiError(error: any): error is ApiError {
   return error && typeof error.message === 'string' && typeof error.statusCode === 'number' && typeof error.name === 'string';
 }
 
+export interface AbortError extends Error{
+  message:string,
+  id:number
+}
+export function AbortErrorFactory(id:number, message:string):AbortError {
+  return {
+    id, message, name: 'AbortError',
+  };
+}
+export function isAbortError(error: any): error is AbortError {
+  return error && typeof error.message === 'string' && typeof error.id === 'number' && typeof error.name === 'string';
+}
+
 const baseRequest = async <ReturnType>(
   method: string,
   url: string,
@@ -47,8 +61,10 @@ const baseRequest = async <ReturnType>(
         Authorization: `Bearer ${localStorage.getItem('access_token') || ''}`,
         ...config.headers,
       },
+      signal: config.signal,
       ...config,
     });
+
     if (!req.ok) {
       const resbody = await req.text();
       throw ApiErrorFactory(req.status, resbody);

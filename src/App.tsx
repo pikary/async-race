@@ -11,21 +11,28 @@ import { EngineStatuses } from './store/cars/types';
 import WinnerBanner from './components/WinnerBanner';
 import { createWinnerAsync, updateWinnerAsync } from './store/winners/api';
 import Footer from './components/Footer';
+import { updateRaceStatus } from './store/cars';
 
 function App() {
-  const { data: cars } = useTypedSelector((state) => state.cars);
+  const { data: cars, race } = useTypedSelector((state) => state.cars);
   const { data: winners } = useTypedSelector((state) => state.winners);
   const dispatch = useAppDispatch();
-  const [winner, setWinner, findWinner] = useFindWinner(cars || []);
+  const [winner, setWinner, findWinner] = useFindWinner(race.cars || []);
   const handleBannerClose = () => {
     setWinner(null);
   };
   useEffect(() => {
-    if (cars?.every((car) => car.engineStatus === EngineStatuses.STARTED)) {
+    // console.log(race.cars);
+
+    if (race.cars.every((car) => car.engineStatus === EngineStatuses.DRIVE)) {
+      console.log('finding winner');
+
       findWinner();
+      // dispatch(updateRaceStatus('finished'));
+
       // create winner
     }
-  }, [cars]);
+  }, [race.cars]);
   useEffect(() => {
     if (winner) {
       const winnerobj = winners?.find((el) => el.id === winner.id);
