@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter, Route, Routes, Navigate,
 } from 'react-router-dom';
-import useFindWinner from './hooks/useFindWInner';
 import { useAppDispatch, useTypedSelector } from './store';
 import Garage from './pages/Garage';
 import Winners from './pages/Winners';
 import Header from './components/Header';
-import { EngineStatuses } from './store/cars/types';
+import { EngineStatuses, Car } from './store/cars/types';
 import WinnerBanner from './components/WinnerBanner';
 import { createWinnerAsync, updateWinnerAsync } from './store/winners/api';
 import Footer from './components/Footer';
@@ -17,20 +16,24 @@ function App() {
   const { data: cars, race } = useTypedSelector((state) => state.cars);
   const { data: winners } = useTypedSelector((state) => state.winners);
   const dispatch = useAppDispatch();
-  const [winner, setWinner, findWinner] = useFindWinner(race.cars || []);
+  // const [winner, setWinner, findWinner] = useFindWinner(cars || []);
+  const [winner, setWinner] = useState<Car|null>(null);
   const handleBannerClose = () => {
     setWinner(null);
   };
+
   useEffect(() => {
     // console.log(race.cars);
 
-    if (race.cars.every((car) => car.engineStatus === EngineStatuses.DRIVE)) {
-      console.log('finding winner');
+    if (race.status !== 'done' && race.cars.length === cars?.length && race.cars.some((car) => car.engineStatus === EngineStatuses.FINISHED)) {
+      const sortedParticipants = [...race.cars]
+        .filter((car) => car.engineStatus !== 'crashed') // Filter out cars with engineStatus 'crashed'
+        .sort((a, b) => (a.distance / a.velocity) - (b.distance / b.velocity));
+      const selectedWinner = sortedParticipants[0];
+      setWinner(selectedWinner);
+      console.log(selectedWinner);
 
-      findWinner();
-      // dispatch(updateRaceStatus('finished'));
-
-      // create winner
+      dispatch(updateRaceStatus('done'));
     }
   }, [race.cars]);
   useEffect(() => {

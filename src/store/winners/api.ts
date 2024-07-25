@@ -20,7 +20,7 @@ export const getWinnersAsync = createAsyncThunk<GetWinnersResponse, { page: numb
         const carResult = await baseRequest<Car>('GET', `garage/${winner?.id}`);
         return { ...winner, car: carResult?.data };
       }));
-      console.log(result.data);
+      // console.log(result.data);
 
       return { winners: winnersWithCars, totalCount: +totalCount! } as GetWinnersResponse;
     }

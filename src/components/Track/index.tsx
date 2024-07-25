@@ -5,12 +5,12 @@ import Button from '../../shared/Button';
 import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
 import './styles.scss';
 import { useAppDispatch, useTypedSelector } from '../../store';
-import { selectCar, updateCarProgress, updateRaceParticipants } from '../../store/cars';
+import { selectCar, updateCarProgress } from '../../store/cars';
 import {
   deleteCarAsync, getCarsAsync, toggleCarEngineAsync, driveCarAsync,
 } from '../../store/cars/api';
-import { isApiError } from '../../utils/baseApi';
 
+// updateRaceParticipants
 interface TrackProps {
   car: Car;
 }
@@ -62,7 +62,7 @@ function Track({ car }: TrackProps) {
         // dispatch(updateCarProgress({ id: car.id, progress: thisRef.current!.style.left }));
       } else if (status === EngineStatuses.STARTED) {
         await dispatch(toggleCarEngineAsync({ id: car.id!, status })).then(unwrapResult);
-        dispatch(updateRaceParticipants({ car }));
+        // dispatch(updateRaceParticipants({ car }));
         moveCar();
         unwrapResult(await dispatch(driveCarAsync(car.id!)));
       }

@@ -8,13 +8,7 @@ function useFindWinner(participants: Car[]) {
     const sortedParticipants = [...participants]
       .sort((a, b) => (a.distance / a.velocity) - (b.distance / b.velocity));
     const selectedWinner = sortedParticipants[0];
-    console.log(participants);
-
-    if (selectedWinner) {
-      setTimeout(() => {
-        setWinner(selectedWinner);
-      }, selectedWinner.distance / selectedWinner.velocity);
-    }
+    setWinner(selectedWinner);
     return selectedWinner;
   };
   return [winner, setWinner, findWinner] as

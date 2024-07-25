@@ -105,11 +105,6 @@ const CarsSlice = createSlice({
     },
     updateRaceStatus: (state, action:PayloadAction<string>) => {
       state.race.status = action.payload;
-      state.data = state.data?.map((car) => {
-        car.engineStatus = EngineStatuses.STOPPED;
-        car.progress = '0';
-        return car;
-      });
     },
     updateCarList: (state, action: PayloadAction<Car[]>) => {
       state.data = action.payload;
@@ -190,7 +185,13 @@ const CarsSlice = createSlice({
               velocity: action.payload?.velocity,
               distance: action.payload?.distance,
             };
-            console.log(state.data[index]);
+            state.race.cars[index] = {
+              ...state.data[index],
+              engineStatus: action.meta.arg.status,
+              velocity: action.payload?.velocity,
+              distance: action.payload?.distance,
+            };
+            // console.log(state.data[index]);
 
             // console.log('adasd');
 
