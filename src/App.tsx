@@ -12,11 +12,11 @@ import WinnerBanner from './components/WinnerBanner';
 import { createWinnerAsync, getWinnerAsync, updateWinnerAsync } from './store/winners/api';
 import Footer from './components/Footer';
 import { updateRaceStatus } from './store/cars';
-import { Winner } from './store/winners/types';
+// import { Winner } from './store/winners/types';
 
 function App() {
   const { data: cars, race } = useTypedSelector((state) => state.cars);
-  const { data: winners } = useTypedSelector((state) => state.winners);
+  // const { data: winners } = useTypedSelector((state) => state.winners);
   const dispatch = useAppDispatch();
   // const [winner, setWinner, findWinner] = useFindWinner(cars || []);
   const [winner, setWinner] = useState<Car|null>(null);

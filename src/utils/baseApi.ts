@@ -11,15 +11,6 @@ interface ApiResponse<ReturnType>{
   statusCode: number;
 }
 
-// export class ApiError extends Error {
-//   statusCode: number;
-
-//   constructor(message: string, statusCode: number) {
-//     super(message);
-//     this.name = 'ApiError';
-//     this.statusCode = statusCode;
-//   }
-// }
 export interface ApiError extends Error{
   statusCode:number,
   message:string

@@ -34,7 +34,7 @@ function Button(props: ButtonProps) {
                   <p className="button__mob-view">{shortenText}</p>
                   <p className="button__pc-view">{text}</p>
               </>
-          ) : <p>{text}</p> }
+          ) : text && <p>{text}</p> }
           {icon}
       </button>
   );

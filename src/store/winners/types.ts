@@ -12,7 +12,7 @@ export interface Winner{
 
 export enum OrderTypes {
     ASC='ASC',
-    DSC='DSC'
+    DSC='DESC'
 }
 
 export enum SortTypes {

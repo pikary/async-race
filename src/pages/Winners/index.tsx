@@ -7,37 +7,30 @@ import { ReactComponent as CarSVG } from '../../assets/BW_Hatchback.svg';
 
 import './styles.scss';
 import { getWinnersAsync } from '../../store/winners/api';
+import { setCurrentPage, setOrderType, setSortType } from '../../store/winners';
 import { OrderTypes, SortTypes } from '../../store/winners/types';
-import { setCurrentPage, setTableFilters } from '../../store/winners';
-
-function SortBtn({ order }: { order: OrderTypes }) {
-  return (
-    order === OrderTypes.ASC ? <FaSortAmountDown /> : <FaSortAmountUp />
-  );
-}
 
 function Winners() {
   const {
     data, currentPage, sort, order,
   } = useTypedSelector((state) => state.winners);
   const dispatch = useAppDispatch();
-
-  //   const [sortBy, setSortBy] = useState<null|SortTypes>(SortTypes.ID);
-  //   const [order, setOrder] = useState<OrderTypes>(OrderTypes.ASC);
-  //   const handleSort
-  // eslint-disable-next-line no-shadow
-  const handleChangeSort = (sort:SortTypes, order:OrderTypes) => {
-    dispatch(setTableFilters({ sort, order }));
-  };
-  //   const handleChangeOrder = (order:Order) =>{
-
-  //   }
   const handleNextPage = () => {
     dispatch(setCurrentPage(currentPage + 1));
   };
 
   const handlePreviousPage = () => {
     dispatch(setCurrentPage(currentPage - 1));
+  };
+  const handleChangeSortType = (sortType:SortTypes) => {
+    dispatch(setSortType(sortType));
+  };
+  const toggleSortOrder = () => {
+    if (order === OrderTypes.ASC) {
+      dispatch(setOrderType(OrderTypes.DSC));
+    } else {
+      dispatch(setOrderType(OrderTypes.ASC));
+    }
   };
   useEffect(() => {
     const fetchWinners = async () => {
@@ -49,14 +42,28 @@ function Winners() {
   }, [dispatch, currentPage, sort, order]);
   return (
       <div className="winners">
-          <h2 className="winners__header">Winners</h2>
+          <div className="winners__header">
+              <h2 className="winners__header__heading">Winners</h2>
+              <div className="winners__header__sorting">
+                  <select className="winners__header__sorting__selector" id="sortType" value={sort} onChange={(e) => handleChangeSortType(e.target.value as SortTypes)}>
+                      <option value="">Select Sort Type</option>
+                      {Object.values(SortTypes).map((type) => (
+                          <option key={type} value={type}>
+                              {type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}
+                          </option>
+                      ))}
+                  </select>
+                  <Button className="winners__header__sorting__btn" onClick={toggleSortOrder} text="" icon={order === OrderTypes.DSC ? <FaSortAmountDown size={20} /> : <FaSortAmountUp size={20} />} />
+              </div>
+              {/* <select name="" id="" /> */}
+          </div>
+
           <table className="winners__table">
               <thead>
                   <tr className="winners__table__header">
                       <td className="winners__table__header__text">
                           <div className="winners__table__header__text__wrapper">
                               <span>#</span>
-                              <Button onClick={() => { handleChangeSort(SortTypes.ID, order === OrderTypes.DSC ? OrderTypes.ASC : OrderTypes.DSC); }} icon={<SortBtn order={order} />} text="" disabled={false} />
                           </div>
                       </td>
                       <td className="winners__table__header__text">
@@ -72,13 +79,13 @@ function Winners() {
                       <td className="winners__table__header__text highlight">
                           <div className="winners__table__header__text__wrapper">
                               <span>WINS</span>
-                              <Button onClick={() => { handleChangeSort(SortTypes.WIN, order === OrderTypes.DSC ? OrderTypes.ASC : OrderTypes.DSC); }} icon={<SortBtn order={order} />} text="" />
+
                           </div>
                       </td>
                       <td className="winners__table__header__text">
                           <div className="winners__table__header__text__wrapper">
                               <span>BEST TIME (SECONDS)</span>
-                              <Button onClick={() => { handleChangeSort(SortTypes.TIME, order === OrderTypes.DSC ? OrderTypes.ASC : OrderTypes.DSC); }} icon={<SortBtn order={order} />} text="" />
+
                           </div>
                       </td>
                   </tr>

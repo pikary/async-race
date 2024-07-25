@@ -9,7 +9,8 @@ interface WinnersSliceState extends SliceState<Winner[]|undefined> {
   currentPage:number,
   totalAmount:number,
   sort:SortTypes,
-  order:OrderTypes
+  order:OrderTypes,
+  filter:Record<SortTypes, {active:boolean, order:OrderTypes}>
 }
 const initialState: WinnersSliceState = {
   isLoading: false,
@@ -19,6 +20,11 @@ const initialState: WinnersSliceState = {
   totalAmount: 0,
   order: OrderTypes.ASC,
   sort: SortTypes.ID,
+  filter: {
+    [SortTypes.ID]: { active: true, order: OrderTypes.DSC },
+    [SortTypes.TIME]: { active: false, order: OrderTypes.DSC },
+    [SortTypes.WIN]: { active: false, order: OrderTypes.DSC },
+  },
 };
 
 const WinnerSlice = createSlice({
