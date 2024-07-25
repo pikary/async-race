@@ -8,12 +8,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string,
   className?: string,
   onClick?: () => void,
+  shortenText?:string,
   color?: ButtonType
 }
 
 function Button(props: ButtonProps) {
   const {
-    onClick, className, type, disabled, text, icon, color,
+    onClick, className, type, disabled, text, icon, color, shortenText,
   } = props;
 
   return (
@@ -23,13 +24,17 @@ function Button(props: ButtonProps) {
         className={classnames('button', color, className)}
         type={type}
       >
-          {text && (
+          {/* {text && (
           <p>
               {text}
-
           </p>
-          )}
-
+          )} */}
+          {shortenText ? (
+              <>
+                  <p className="button__mob-view">{shortenText}</p>
+                  <p className="button__pc-view">{text}</p>
+              </>
+          ) : <p>{text}</p> }
           {icon}
       </button>
   );
@@ -41,6 +46,7 @@ Button.defaultProps = {
   onClick: () => { },
   color: '',
   text: '',
+  shortenText: '',
 };
 
 export default Button;

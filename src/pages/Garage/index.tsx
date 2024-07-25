@@ -178,16 +178,18 @@ function Garage() {
                     text="reset"
                   />
               </div>
-              <form className="garage__header__form garage__header__form-create" onSubmit={handleCreateCar}>
-                  <Input className="garage__header__form-input" type="text" name="create-car" placeholder="Car brand" labelText="" onChange={handleCarNameChange} value={carName} />
-                  <input type="color" onChange={handleColorChange} value={color} />
-                  <Button color="pink" text="create" type="submit" />
-              </form>
-              <form className="garage__header__form garage__header__form-update" onSubmit={handleUpdateCar}>
-                  <Input disabled={selectedCar === null} className="garage__header__form-input" value={selectedCar?.name} onChange={(e) => dispatch(updateSelectedCarName(e.target.value))} type="text" name="update-car" placeholder="Car brand" labelText="" />
-                  <input disabled={selectedCar === null} type="color" value={selectedCar?.color} onChange={(e) => dispatch(updateSelectedCarColor(e.target.value))} />
-                  <Button disabled={selectedCar === null} color="pink" text="update" type="submit" />
-              </form>
+              <div className="garage__header__form-cont">
+                  <form className="garage__header__form-cont__form garage__header__form-cont-create" onSubmit={handleCreateCar}>
+                      <Input className="garage__header__form-cont__form-input" type="text" name="create-car" placeholder="Car brand" labelText="" onChange={handleCarNameChange} value={carName} />
+                      <input type="color" onChange={handleColorChange} value={color} />
+                      <Button color="pink" text="create" type="submit" />
+                  </form>
+                  <form className="garage__header__form-cont__form garage__header__form-cont-update" onSubmit={handleUpdateCar}>
+                      <Input disabled={selectedCar === null} className="garage__header__form-cont__form-input" value={selectedCar?.name} onChange={(e) => dispatch(updateSelectedCarName(e.target.value))} type="text" name="update-car" placeholder="Car brand" labelText="" />
+                      <input disabled={selectedCar === null} type="color" value={selectedCar?.color} onChange={(e) => dispatch(updateSelectedCarColor(e.target.value))} />
+                      <Button disabled={selectedCar === null} color="pink" text="update" type="submit" />
+                  </form>
+              </div>
 
               <Button color="blue" text="generate cars" className="garage__header__gen" onClick={handleGenerateCars2} />
           </div>

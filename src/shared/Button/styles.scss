@@ -31,4 +31,22 @@
         border: 2px solid gray;
         color: gray;
     }
+
+    &__mob-view{
+        display: none;
+    }
+
+    &__pc-view{
+        display: block;
+    }
+
+    @media screen and (max-width:768px) {
+        
+        &__mob-view{
+            display: block;
+        }
+        &__pc-view{
+            display: none;
+        }
+    }
 }
