@@ -45,4 +45,14 @@
             }
         }
     }
+
+    @media screen and (max-width: 768px) {
+
+        flex-direction: column;
+        flex-flow: column-reverse;
+        row-gap: 15px;
+    }
+
+
+
 }

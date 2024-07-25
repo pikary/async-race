@@ -40,7 +40,7 @@ function Header() {
                 color="pink"
                 type="button"
                 onClick={() => {
-                  navigateTo('garage');
+                  navigateTo('');
                 }}
                 text="garage"
               />
