@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '../../shared/Button';
@@ -9,11 +9,32 @@ import './styles.scss';
 
 function Header() {
   const navigate = useNavigate();
+  const headerRef = useRef<HTMLHeadElement>(null);
+  const [arrowCount, setArrowCount] = useState(0);
+
   const navigateTo = (route:string) => {
     navigate(`/${route}`);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      const container = headerRef.current;
+      if (container) {
+        if (container.clientWidth > 768) {
+          setArrowCount(9);
+        } else {
+          setArrowCount(8);
+        }
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
+
   return (
-      <header className="header">
+      <header className="header" ref={headerRef}>
           <div className="header__buttons">
               <Button
                 color="pink"
@@ -33,16 +54,7 @@ function Header() {
               />
           </div>
           <div className="header__arrows">
-              <Arrow size="small" color="pink" />
-              <Arrow size="small" color="pink" />
-              <Arrow size="small" color="pink" />
-              <Arrow size="small" color="pink" />
-              <Arrow size="small" color="pink" />
-              <Arrow size="small" color="pink" />
-              <Arrow size="small" color="pink" />
-              <Arrow size="small" color="pink" />
-
-              <Arrow size="small" color="pink" />
+              {Array.from({ length: arrowCount }).map(() => <Arrow size="small" color="pink" />)}
           </div>
           <div className="header__logo">
               <div className="header__logo__container">
@@ -60,16 +72,8 @@ function Header() {
 
           </div>
           <div className="header__arrows">
-              <Arrow size="small" color="blue" />
-              <Arrow size="small" color="blue" />
-              <Arrow size="small" color="blue" />
-              <Arrow size="small" color="blue" />
-              <Arrow size="small" color="blue" />
-              <Arrow size="small" color="blue" />
-              <Arrow size="small" color="blue" />
-              <Arrow size="small" color="blue" />
+              {Array.from({ length: arrowCount }).map(() => <Arrow size="small" color="blue" />)}
 
-              <Arrow size="small" color="blue" />
           </div>
       </header>
   );
