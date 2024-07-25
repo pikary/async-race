@@ -1,62 +1,42 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { FaPlay } from 'react-icons/fa6';
-import { RxUpdate } from 'react-icons/rx';
-import { BiRightArrow, BiLeftArrow } from 'react-icons/bi';
+/* eslint-disable max-len */
+import React, { useEffect, useCallback } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useAppDispatch, useTypedSelector } from '../../store';
-import Button from '../../shared/Button';
-import Input from '../../shared/Input';
-import Arrow from '../../shared/Arrow';
 import Track from '../../components/Track';
-import { Car, createCarWithDefaults, EngineStatuses } from '../../store/cars/types';
+import { createCarWithDefaults, EngineStatuses } from '../../store/cars/types';
 import './styles.scss';
 import {
   createRace,
-  setCurrentPage, updateCarList, updateSelectedCarColor, updateSelectedCarName, updateCarProgress,
+  setCurrentPage, updateCarList, updateRaceStatus,
 } from '../../store/cars';
 import {
-  createCarAsync, driveCarAsync, getCarsAsync, toggleCarEngineAsync, updateCarAsync,
+  createCarAsync, driveCarAsync, getCarsAsync, toggleCarEngineAsync,
 } from '../../store/cars/api';
 import { generateRandomCars } from '../../store/cars/helpers';
+import Pagination from '../../components/Pagination';
+import GarageHeader from './components/Header';
+import GarageBoundary from './components/GarageBoundary/GarageBoundary';
 
 const CARS_PER_PAGE = 7;
 
 function Garage() {
   const {
-    data, currentPage, selectedCar, totalAmount, race,
+    data, currentPage, totalAmount, race,
   } = useTypedSelector((state) => state.cars);
   const dispatch = useAppDispatch();
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  const [arrowCount, setArrowCount] = useState(0);
-  const [carName, setCarName] = useState('');
-  const [color, setColor] = useState('');
+  useEffect(() => {
+    const fetchGarageHandler = async () => {
+      await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
+    };
+    if (currentPage === race?.page) {
+      dispatch(updateCarList(race.cars!));
+    } else {
+      fetchGarageHandler();
+    }
+  }, [dispatch, currentPage, race?.page]);
 
-  const handleCarNameChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    setCarName(e.target.value);
-  };
-  const handleColorChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    setColor(e.target.value);
-  };
-  const handleCreateCar = async (e:React.FormEvent) => {
-    try {
-      e.preventDefault();
-      const newCar:Car = createCarWithDefaults({ name: carName, color });
-      await dispatch(createCarAsync(newCar));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setCarName('');
-      setColor('');
-    }
-  };
-  const handleUpdateCar = async (e:React.FormEvent) => {
-    e.preventDefault();
-    if (selectedCar) {
-      await dispatch(updateCarAsync(selectedCar));
-    }
-  };
-  const handleRaceStart = async () => {
+  const handleRaceStart = useCallback(async () => {
     try {
       dispatch(createRace({ currentPage, cars: data || [createCarWithDefaults()] }));
       const startEngineRequests = data!.map((car) => dispatch(toggleCarEngineAsync({
@@ -66,46 +46,17 @@ function Garage() {
 
       const startEngineResults = await Promise.all(startEngineRequests);
       startEngineResults.forEach(async (res) => {
-        // unwrapResult(res);
         await dispatch(driveCarAsync(res.meta.arg.id));
-
-        // unwrapResult(driveReq);
       });
-
-      // await Promise.all(driveCarRequests);
     } catch (error) {
       console.log('Error starting engines or driving cars:', error);
     }
-  };
-  // const handleGenerateCars = () => {
-  //   dispatch(generateCars());
-  // };
+  }, [data, currentPage, dispatch]);
 
-  const handleNextPage = () => {
-    dispatch(setCurrentPage(currentPage + 1));
-  };
+  const handleNextPage = useCallback(() => dispatch(setCurrentPage(currentPage + 1)), [currentPage, dispatch]);
+  const handlePreviousPage = useCallback(() => dispatch(setCurrentPage(currentPage - 1)), [currentPage, dispatch]);
 
-  const handlePreviousPage = () => {
-    dispatch(setCurrentPage(currentPage - 1));
-  };
-  useEffect(() => {
-    const handleResize = () => {
-      const container = containerRef.current;
-      if (container) {
-        const containerWidth = container.clientWidth;
-        const arrowWidth = 30; // 20 + флекс гап 10
-        const numberOfArrows = Math.floor(containerWidth / arrowWidth);
-        setArrowCount(numberOfArrows - 1);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    // Cleanup function to remove the event listener
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const handleGenerateCars2 = async () => {
+  const handleGenerateCars = useCallback(async () => {
     const randomCars = generateRandomCars(100);
     const requests = randomCars.map((car) => dispatch(createCarAsync(car)));
     try {
@@ -113,110 +64,42 @@ function Garage() {
     } catch (error) {
       console.error('Error generating cars:', error);
     }
-  };
+  }, [dispatch]);
 
-  useEffect(() => {
-    // console.log('SASIHUI');
-
-    const fetchGarageHandler = async () => {
-      await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
-    };
-    if (currentPage === race?.page) {
-      // console.log('ASDASDASDASDASDASDASDASDASDASDAS');
-      // console.log(race.cars);
-
-      dispatch(updateCarList(race.cars!));
-    } else {
-      fetchGarageHandler();
-    }
-  }, [dispatch, currentPage]);
-  const handleReset = async () => {
+  const handleReset = useCallback(async () => {
     try {
-      // dispatch(updateRaceStatus('finished'));
-      const requests = data!.map(
-        (car) => dispatch(toggleCarEngineAsync({
-          id: car.id,
-          status: EngineStatuses.STOPPED,
-        })),
-      );
+      const requests = data!.map((car) => dispatch(toggleCarEngineAsync({
+        id: car.id,
+        status: EngineStatuses.STOPPED,
+      })));
       await Promise.all(requests);
+      dispatch(updateRaceStatus('idle'));
     } catch (e) {
       console.log(e);
     }
-  };
-  const arrows = Array.from({ length: arrowCount }, (_, index) => (
-      <Arrow
-        key={index}
-        size="small"
-        color={(index % 8 < 4 || index % 8 >= 8) ? 'pink' : 'blue'}
-      />
-  ));
+  }, [data, dispatch]);
+
   return (
       <div className="garage">
-          <div className="garage__header">
-              <div className="garage__header__control-btns">
-                  <Button
-                    color="blue"
-                    type="button"
-                    onClick={handleRaceStart}
-                    icon={<FaPlay />}
-                    disabled={race?.status === 'started'}
-                    text="race"
-                  />
-                  <Button
-                    color="pink"
-                    type="button"
-                    onClick={handleReset}
-                    icon={<RxUpdate />}
-                    text="reset"
-                  />
-              </div>
-              <div className="garage__header__form-cont">
-                  <form className="garage__header__form-cont__form garage__header__form-cont-create" onSubmit={handleCreateCar}>
-                      <Input className="garage__header__form-cont__form-input" type="text" name="create-car" placeholder="Car brand" labelText="" onChange={handleCarNameChange} value={carName} />
-                      <input type="color" onChange={handleColorChange} value={color} />
-                      <Button color="pink" text="create" type="submit" />
-                  </form>
-                  <form className="garage__header__form-cont__form garage__header__form-cont-update" onSubmit={handleUpdateCar}>
-                      <Input disabled={selectedCar === null} className="garage__header__form-cont__form-input" value={selectedCar?.name} onChange={(e) => dispatch(updateSelectedCarName(e.target.value))} type="text" name="update-car" placeholder="Car brand" labelText="" />
-                      <input disabled={selectedCar === null} type="color" value={selectedCar?.color} onChange={(e) => dispatch(updateSelectedCarColor(e.target.value))} />
-                      <Button disabled={selectedCar === null} color="pink" text="update" type="submit" />
-                  </form>
-              </div>
-
-              <Button color="blue" text="generate cars" className="garage__header__gen" onClick={handleGenerateCars2} />
-          </div>
+          <GarageHeader
+            handleRaceStart={handleRaceStart}
+            handleReset={handleReset}
+            handleGenerateCars={handleGenerateCars}
+          />
           <div className="garage__race">
-              <div className="garage__race__boundary" ref={containerRef}>
-                  <div className="garage__race__boundary-upper" />
-                  <div className="garage__race__boundary-under" />
-                  {arrows}
-              </div>
-              <div>
+              <GarageBoundary />
+              <div style={{ marginBottom: 30 }}>
                   {data?.map((car) => (
                       <Track key={car.id} car={car} />
                   ))}
               </div>
-              <div className="garage__race__boundary" style={{ marginTop: 25 }} ref={containerRef}>
-                  <div className="garage__race__boundary-upper" />
-                  <div className="garage__race__boundary-under" />
-                  {arrows}
-              </div>
-              <div className="garage__race__pagination">
-                  <h4>
-                      GARAGE (
-                      {totalAmount}
-                      )
-                  </h4>
-                  <div className="garage__race__pagination__controls">
-                      <Button className="garage__race__pagination__controls__btn" text="" onClick={handlePreviousPage} icon={<BiLeftArrow size={25} />} />
-                      <h4>
-                          PAGE #
-                          {currentPage}
-                      </h4>
-                      <Button className="garage__race__pagination__controls__btn" text="" onClick={handleNextPage} icon={<BiRightArrow size={25} />} />
-                  </div>
-              </div>
+              <GarageBoundary />
+              <Pagination
+                currentPage={currentPage}
+                totalAmount={totalAmount}
+                onNextPage={handleNextPage}
+                onPreviousPage={handlePreviousPage}
+              />
           </div>
       </div>
   );
