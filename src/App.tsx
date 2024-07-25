@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter, Route, Routes, Navigate,
 } from 'react-router-dom';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useAppDispatch, useTypedSelector } from './store';
 import Garage from './pages/Garage';
 import Winners from './pages/Winners';
 import Header from './components/Header';
 import { EngineStatuses, Car } from './store/cars/types';
 import WinnerBanner from './components/WinnerBanner';
-import { createWinnerAsync, updateWinnerAsync } from './store/winners/api';
+import { createWinnerAsync, getWinnerAsync, updateWinnerAsync } from './store/winners/api';
 import Footer from './components/Footer';
 import { updateRaceStatus } from './store/cars';
+import { Winner } from './store/winners/types';
 
 function App() {
   const { data: cars, race } = useTypedSelector((state) => state.cars);
@@ -36,23 +38,27 @@ function App() {
       dispatch(updateRaceStatus('done'));
     }
   }, [race.cars]);
+
+  const handleGetWinner = async (car:Car) => {
+    const result = unwrapResult(await dispatch(getWinnerAsync(car.id)));
+    if (result) {
+      await dispatch(updateWinnerAsync({
+        time: ((car.distance / car.velocity) / 1000).toFixed(2),
+        id: result.id,
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        wins: result!.wins + 1,
+      }));
+    } else {
+      await dispatch(createWinnerAsync({
+        time: ((car.distance / car.velocity) / 1000).toFixed(2),
+        id: car.id,
+        wins: 1,
+      }));
+    }
+  };
   useEffect(() => {
     if (winner) {
-      const winnerobj = winners?.find((el) => el.id === winner.id);
-      if (winnerobj) {
-        dispatch(updateWinnerAsync({
-          time: ((winner.distance / winner.velocity) / 1000).toFixed(2),
-          id: winner.id,
-          // eslint-disable-next-line no-unsafe-optional-chaining
-          wins: winnerobj!.wins + 1,
-        }));
-      } else {
-        dispatch(createWinnerAsync({
-          time: ((winner.distance / winner.velocity) / 1000).toFixed(2),
-          id: winner.id,
-          wins: 1,
-        }));
-      }
+      handleGetWinner(winner);
     }
   }, [dispatch, winner]);
 

@@ -7,6 +7,21 @@ interface GetWinnersResponse{
   winners: Winner[],
   totalCount:number
 }
+
+export const getWinnerAsync = createAsyncThunk<Winner|undefined, number, { rejectValue: string }>('winners/get', async (id, thunkAPI) => {
+  try {
+    const result = await baseRequest<Winner>('GET', `winners/${id}`, null);
+    return result?.data;
+  } catch (e) {
+    if (isApiError(e)) {
+      if (e.statusCode === 404) {
+        return thunkAPI.rejectWithValue('No winner found');
+      }
+    }
+    return thunkAPI.rejectWithValue((e as Error).message);
+  }
+});
+
 export const getWinnersAsync = createAsyncThunk<GetWinnersResponse, { page: number, limit: number, sort:SortTypes, order:OrderTypes }, { rejectValue: string }>('winners/get', async (reqBody, thunkAPI) => {
   try {
     const result = await baseRequest<Winner[]>('GET', `winners?_page=${reqBody.page}&_limit=${reqBody.limit}&_sort=${reqBody.sort}&_order=${reqBody.order}`);
