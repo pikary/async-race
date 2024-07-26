@@ -4,6 +4,7 @@ import { useAppDispatch, useTypedSelector } from '../store';
 import { EngineStatuses, Car } from '../store/cars/types';
 import { createWinnerAsync, getWinnerAsync, updateWinnerAsync } from '../store/winners/api';
 import { updateRaceStatus } from '../store/cars';
+import { isApiError } from '../utils/baseApi';
 
 const useWinner = () => {
   const { data: cars, race } = useTypedSelector((state) => state.cars);
@@ -24,21 +25,29 @@ const useWinner = () => {
   const handleGetWinner = async (car: Car) => {
     try {
       const result = unwrapResult(await dispatch(getWinnerAsync(car.id)));
+      console.log(result);
+
       if (result) {
         await dispatch(updateWinnerAsync({
           time: ((car.distance / car.velocity) / 1000).toFixed(2),
           id: result.id,
           wins: result.wins + 1,
         }));
-      } else {
-        await dispatch(createWinnerAsync({
-          time: ((car.distance / car.velocity) / 1000).toFixed(2),
-          id: car.id,
-          wins: 1,
-        }));
       }
     } catch (e) {
       console.log(e);
+
+      if (isApiError(e)) {
+        console.log(e);
+
+        if (e.statusCode === 404) {
+          await dispatch(createWinnerAsync({
+            time: ((car.distance / car.velocity) / 1000).toFixed(2),
+            id: car.id,
+            wins: 1,
+          }));
+        }
+      }
     }
   };
 

@@ -8,14 +8,14 @@ interface GetWinnersResponse{
   totalCount:number
 }
 
-export const getWinnerAsync = createAsyncThunk<Winner|undefined, number, { rejectValue: string }>('winners/get', async (id, thunkAPI) => {
+export const getWinnerAsync = createAsyncThunk<Winner|undefined, number, { rejectValue: ApiError |string}>('winners/getone', async (id, thunkAPI) => {
   try {
     const result = await baseRequest<Winner>('GET', `winners/${id}`, null);
     return result?.data;
   } catch (e) {
     if (isApiError(e)) {
       if (e.statusCode === 404) {
-        return thunkAPI.rejectWithValue('No winner found');
+        return thunkAPI.rejectWithValue(e);
       }
     }
     return thunkAPI.rejectWithValue((e as Error).message);
