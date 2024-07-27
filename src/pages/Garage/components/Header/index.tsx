@@ -6,7 +6,8 @@ import Button from '../../../../shared/Button';
 import Input from '../../../../shared/Input';
 import { createCarWithDefaults, Car } from '../../../../store/cars/types';
 import {
-  updateSelectedCarColor, updateSelectedCarName,
+  updateSelectedCarColor, updateSelectedCarName, setCreateFormField,
+  clearForm,
 } from '../../../../store/cars';
 import {
   createCarAsync, updateCarAsync,
@@ -22,20 +23,25 @@ interface GarageHeaderProps {
 function GarageHeader({
   handleRaceStart, handleReset, handleGenerateCars,
 }:GarageHeaderProps) {
-  const { selectedCar, race } = useTypedSelector((state) => state.cars);
+  const { selectedCar, race, createform } = useTypedSelector((state) => state.cars);
   const dispatch = useAppDispatch();
   const [carName, setCarName] = useState('');
   const [color, setColor] = useState('');
 
-  // eslint-disable-next-line max-len
-  const handleCarNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setCarName(e.target.value);
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => setColor(e.target.value);
+  const handleCarNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setCreateFormField({ field: 'name', value: e.target.value }));
+  };
+
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setCreateFormField({ field: 'color', value: e.target.value }));
+  };
 
   const handleCreateCar = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const newCar: Car = createCarWithDefaults({ name: carName, color });
       await dispatch(createCarAsync(newCar));
+      dispatch(clearForm());
     } catch (err) {
       console.error(err);
     } finally {
@@ -72,8 +78,8 @@ function GarageHeader({
           </div>
           <div className="garage__header__form-cont">
               <form className="garage__header__form-cont__form garage__header__form-cont-create" onSubmit={handleCreateCar}>
-                  <Input className="garage__header__form-cont__form-input" type="text" name="create-car" placeholder="Car brand" labelText="" onChange={handleCarNameChange} value={carName} />
-                  <input type="color" onChange={handleColorChange} value={color} />
+                  <Input className="garage__header__form-cont__form-input" type="text" name="create-car" placeholder="Car brand" labelText="" onChange={handleCarNameChange} value={createform.name} />
+                  <input type="color" onChange={handleColorChange} value={createform.color} />
                   <Button color="pink" text="create" type="submit" />
               </form>
               <form className="garage__header__form-cont__form garage__header__form-cont-update" onSubmit={handleUpdateCar}>

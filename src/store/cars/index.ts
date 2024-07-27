@@ -10,11 +10,17 @@ import {
 } from './api';
 import { isAbortError, isApiError } from '../../utils/baseApi';
 
+interface FormState {
+  name: string;
+  color: string;
+}
 interface CarsSliceState extends SliceState<Car[] | undefined> {
   currentPage: number,
   totalAmount: number,
   selectedCar: Car | null,
-  race: Race
+  race: Race,
+  createform: FormState;
+  updateForm: FormState;
 }
 const initialState: CarsSliceState = {
   isLoading: false,
@@ -29,12 +35,32 @@ const initialState: CarsSliceState = {
     page: 0,
     winner: null,
   },
+  createform: {
+    name: '',
+    color: '',
+  },
+  updateForm: {
+    name: '',
+    color: '',
+  },
 };
 
 const CarsSlice = createSlice({
   name: 'cars',
   initialState,
   reducers: {
+    setCreateFormField(state, action: PayloadAction<{ field: keyof FormState, value: string }>) {
+      state.createform[action.payload.field] = action.payload.value;
+    },
+    setUpdateFormField(state, action: PayloadAction<{ field: keyof FormState, value: string }>) {
+      state.updateForm[action.payload.field] = action.payload.value;
+    },
+    clearForm(state) {
+      state.createform = { name: '', color: '' };
+    },
+    clearUpdateForm(state) {
+      state.updateForm = { name: '', color: '' };
+    },
     createCar: (state, action: PayloadAction<Car>) => {
       state.data?.push(action.payload);
     },
@@ -277,6 +303,7 @@ export const {
   updateCarList,
   updateRaceStatus,
   updateRaceParticipants,
+  setCreateFormField, setUpdateFormField, clearForm, clearUpdateForm,
 } = CarsSlice.actions;
 
 export default CarsSlice.reducer;

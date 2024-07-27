@@ -1,18 +1,17 @@
 import React, { useEffect } from 'react';
-import { BiRightArrow, BiLeftArrow } from 'react-icons/bi';
 import { FaSortAmountDown, FaSortAmountUp } from 'react-icons/fa';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import Button from '../../shared/Button';
 import { ReactComponent as CarSVG } from '../../assets/BW_Hatchback.svg';
-
-import './styles.scss';
+import Pagination from '../../components/Pagination';
 import { getWinnersAsync } from '../../store/winners/api';
 import { setCurrentPage, setOrderType, setSortType } from '../../store/winners';
 import { OrderTypes, SortTypes } from '../../store/winners/types';
+import './styles.scss';
 
 function Winners() {
   const {
-    data, currentPage, sort, order,
+    data, currentPage, sort, order, totalAmount,
   } = useTypedSelector((state) => state.winners);
   const dispatch = useAppDispatch();
   const handleNextPage = () => {
@@ -114,14 +113,13 @@ function Winners() {
               </tbody>
           </table>
           <div className="winners__footer">
-              <div className="winners__footer__pagination__controls">
-                  <Button className="winners__footer__pagination__controls__btn disabled" text="" onClick={handlePreviousPage} icon={<BiLeftArrow size={25} />} />
-                  <h4>
-                      PAGE #
-                      {currentPage}
-                  </h4>
-                  <Button className="winners__footer__pagination__controls__btn" text="" onClick={handleNextPage} icon={<BiRightArrow size={25} />} />
-              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalAmount={totalAmount}
+                // itemsPerPage={7} // Assuming 7 items per page
+                onNextPage={handleNextPage}
+                onPreviousPage={handlePreviousPage}
+              />
           </div>
       </div>
   );

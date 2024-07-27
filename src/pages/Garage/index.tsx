@@ -89,9 +89,13 @@ function Garage() {
           <div className="garage__race">
               <GarageBoundary />
               <div style={{ marginBottom: 30 }}>
-                  {data?.map((car) => (
-                      <Track key={car.id} car={car} />
-                  ))}
+                  {(!data || data.length === 0) ? (
+                      <h4 className="garage__race__err">No cars</h4>
+                  ) : (
+                    data.map((car) => (
+                        <Track key={car.id} car={car} />
+                    ))
+                  )}
               </div>
               <GarageBoundary />
               <Pagination
