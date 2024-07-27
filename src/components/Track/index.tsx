@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Car, EngineStatuses } from '../../store/cars/types';
 import Button from '../../shared/Button';
@@ -6,7 +6,7 @@ import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { selectCar, updateCarProgress } from '../../store/cars';
 import {
-  deleteCarAsync, getCarsAsync, toggleCarEngineAsync, driveCarAsync,
+  deleteCarAsync, toggleCarEngineAsync, driveCarAsync,
 } from '../../store/cars/api';
 import './styles.scss';
 
@@ -16,22 +16,24 @@ interface TrackProps {
 }
 
 function Track({ car }: TrackProps) {
-  const { selectedCar, totalAmount, currentPage } = useTypedSelector((state) => state.cars);
+  const {
+    selectedCar, currentPage,
+  } = useTypedSelector((state) => state.cars);
   const thisRef = useRef<SVGSVGElement>(null);
   const roadRef = useRef<HTMLDivElement>(null);
   const animationFrameId = useRef<number | null>(null);
   const dispatch = useAppDispatch();
 
-  const handleDeleteCar = async (id: number) => {
+  const handleDeleteCar = useCallback(async (id:number) => {
     try {
-      await dispatch(deleteCarAsync(id)).then(unwrapResult);
-      if (totalAmount > 7) {
-        await dispatch(getCarsAsync({ page: currentPage, limit: 7 })).then(unwrapResult);
-      }
+      unwrapResult(await dispatch(deleteCarAsync(id)));
     } catch (e) {
       console.error(e);
     }
-  };
+  }, [currentPage]);
+  // const handleDeleteCar = async (id: number) => {
+
+  // };
   const moveCar = () => {
     const duration = car.distance / car.velocity; // 5 seconds
     const startPosition = 0;

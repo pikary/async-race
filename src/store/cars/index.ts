@@ -177,8 +177,13 @@ const CarsSlice = createSlice({
         if (action.payload && state.data) {
           // action.meta.arg - это он берет параметр айди который кидали в thunk
           state.data = state.data.filter((car) => car.id !== action.meta.arg);
+          state.totalAmount -= 1;
+          if (state.data?.length === 0) {
+            if (state.currentPage > 1) {
+              state.currentPage -= 1;
+            }
+          }
         }
-        state.totalAmount -= 1;
       })
       .addCase(deleteCarAsync.rejected, (state, action) => {
         state.isLoading = false;

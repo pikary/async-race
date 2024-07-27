@@ -27,7 +27,7 @@ function Garage() {
 
   useEffect(() => {
     const fetchGarageHandler = async () => {
-      await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
+      if (data?.length !== 7) await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
     };
     if (currentPage === race?.page) {
       dispatch(updateCarList(race.cars!));
