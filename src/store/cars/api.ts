@@ -90,7 +90,6 @@ export const toggleCarEngineAsync = createAsyncThunk<EngineResponse, {id:number,
       controller?.abort();
       const result = await baseRequest<EngineResponse>('PATCH', `engine?id=${id}&status=${status}`, null, { });
       controllers.delete(id);
-
       return result?.data as EngineResponse;
     }
     const result = await baseRequest<EngineResponse>('PATCH', `engine?id=${id}&status=${status}`, null, { });

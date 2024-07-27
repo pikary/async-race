@@ -3,12 +3,12 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { Car, EngineStatuses } from '../../store/cars/types';
 import Button from '../../shared/Button';
 import { ReactComponent as CarImg } from '../../assets/BW_Hatchback.svg';
-import './styles.scss';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { selectCar, updateCarProgress } from '../../store/cars';
 import {
   deleteCarAsync, getCarsAsync, toggleCarEngineAsync, driveCarAsync,
 } from '../../store/cars/api';
+import './styles.scss';
 
 // updateRaceParticipants
 interface TrackProps {
@@ -59,10 +59,8 @@ function Track({ car }: TrackProps) {
       if (status === EngineStatuses.STOPPED) {
         cancelAnimationFrame(animationFrameId.current!);
         await dispatch(toggleCarEngineAsync({ id: car.id!, status })).then(unwrapResult);
-        // dispatch(updateCarProgress({ id: car.id, progress: thisRef.current!.style.left }));
       } else if (status === EngineStatuses.STARTED) {
         await dispatch(toggleCarEngineAsync({ id: car.id!, status })).then(unwrapResult);
-        // dispatch(updateRaceParticipants({ car }));
         moveCar();
         unwrapResult(await dispatch(driveCarAsync(car.id!)));
       }
@@ -76,13 +74,10 @@ function Track({ car }: TrackProps) {
   };
 
   useEffect(() => {
-    // console.log(car.engineStatus);
-
     if (car.engineStatus === EngineStatuses.STARTED) {
       moveCar();
     } else if (car.engineStatus === EngineStatuses.CRASHED
       || car.engineStatus === EngineStatuses.FINISHED) {
-      console.log('CAR STOPPED');
       cancelAnimationFrame(animationFrameId.current!);
       if (thisRef.current?.style.left) {
         dispatch(updateCarProgress({ id: car.id, progress: thisRef.current.style.left }));
@@ -91,6 +86,7 @@ function Track({ car }: TrackProps) {
       cancelAnimationFrame(animationFrameId.current!);
     }
   }, [car.engineStatus]);
+
   const getCarLeftPosition = (engineStatus:EngineStatuses) => {
     if (engineStatus === EngineStatuses.STOPPED) {
       return '0';

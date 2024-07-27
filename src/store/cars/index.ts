@@ -178,33 +178,47 @@ const CarsSlice = createSlice({
       .addCase(toggleCarEngineAsync.fulfilled, (state, action) => {
         if (state.data) {
           const index = state.data.findIndex((car) => car.id === action.meta.arg.id);
-          if (index >= 0) {
-            state.data[index] = {
+          if (action.meta.arg.status === EngineStatuses.STOPPED) {
+            if (index >= 0) {
+              state.data[index] = {
+                ...state.data[index],
+                engineStatus: action.meta.arg.status,
+                velocity: 0,
+                distance: 0,
+              };
+            }
+            state.race.cars[index] = {
               ...state.data[index],
               engineStatus: action.meta.arg.status,
-              velocity: action.payload?.velocity,
-              distance: action.payload?.distance,
+              velocity: 0,
+              distance: 0,
             };
+          }
+          if (action.meta.arg.status === EngineStatuses.STARTED) {
+            if (index >= 0) {
+              state.data[index] = {
+                ...state.data[index],
+                engineStatus: action.meta.arg.status,
+                velocity: action.payload?.velocity,
+                distance: action.payload?.distance,
+              };
+            }
             state.race.cars[index] = {
               ...state.data[index],
               engineStatus: action.meta.arg.status,
               velocity: action.payload?.velocity,
               distance: action.payload?.distance,
             };
-            // console.log(state.data[index]);
-
-            // console.log('adasd');
-
-            // state.race?.cars.push(state.data[index]);
-            // console.log(state.race?.cars);
           }
         }
       })
       .addCase(toggleCarEngineAsync.rejected, (state, action) => {
         if (state.data) {
           const index = state.data.findIndex((car) => car.id === action.meta.arg.id);
+
           if (index >= 0) {
             state.data[index] = { ...state.data[index], engineStatus: EngineStatuses.STOPPED };
+            state.race.cars[index] = { ...state.data[index], engineStatus: EngineStatuses.STOPPED };
           }
         }
       })

@@ -13,6 +13,8 @@ const useWinner = () => {
 
   useEffect(() => {
     if (race.status !== 'finished' && race.cars.length === cars?.length && race.cars.some((car) => car.engineStatus === EngineStatuses.FINISHED)) {
+      console.log(race.cars);
+
       const sortedParticipants = [...race.cars]
         .filter((car) => car.engineStatus && car.engineStatus !== 'crashed')
         .sort((a, b) => (a.distance / a.velocity) - (b.distance / b.velocity));

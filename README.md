@@ -1,7 +1,7 @@
 # Async Race
 
 ### Deploy
-[https://66a16d0c3dea68449e8cf0a9--legendary-tanuki-151cb3.netlify.app/garage](https://66a16d0c3dea68449e8cf0a9--legendary-tanuki-151cb3.netlify.app/garage)
+[https://66a4e06f07f56f05906b32f1--glittering-salamander-35c40a.netlify.app/]
 
 ## Checklist \_\_\_/400 pts
 
@@ -37,7 +37,7 @@
 
 - [✅] **Car Creation And Editing Panel. CRUD Operations (20 points):** Enable users to create, update, and delete cars. A car has two attributes: "name" and "color". Empty and too long names should be handled. For "delete"-operation car should be deleted from "garage" table as well as from "winners".
 - [✅] **Color Selection (10 points):** Allow color selection from an RGB palette ([like here](https://colorspire.com/rgb-color-wheel/)), displaying the selected color on the car's image along with its name.
-- [ ] **Random Car Creation (20 points):** There should be a button to create random cars (100 cars per click). Name should be assembled from two random parts, for example "Tesla" + "Model S", or "Ford" + "Mustang" (At least 10 different names for each part). Color should be also generated randomly.
+- [✅] **Random Car Creation (20 points):** There should be a button to create random cars (100 cars per click). Name should be assembled from two random parts, for example "Tesla" + "Model S", or "Ford" + "Mustang" (At least 10 different names for each part). Color should be also generated randomly.
 - [✅] **Car Management Buttons (10 points):** Provide buttons near each car's image for updating its attributes or deleting it.
 - [✅] **Pagination (10 points):** Implement pagination for the "Garage" view, displaying 7 cars per page.
 - [ ] **EXTRA POINTS (20 points):**
