@@ -8,6 +8,12 @@ export enum EngineStatuses {
   DRIVE = 'drive',
   FINISHED = 'finished',
 }
+export enum RaceStatuses{
+  IDLE='idle',
+  FINISHED='finished',
+  STARTED='started'
+}
+
 export interface Car {
   name: string;
   color: string;

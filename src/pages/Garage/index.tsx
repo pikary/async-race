@@ -3,7 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import Track from '../../components/Track';
-import { createCarWithDefaults, EngineStatuses } from '../../store/cars/types';
+import { createCarWithDefaults, EngineStatuses, RaceStatuses } from '../../store/cars/types';
 import './styles.scss';
 import {
   createRace,
@@ -98,7 +98,7 @@ function Garage() {
         }),
       ));
       await Promise.all(requests);
-      dispatch(updateRaceStatus('idle'));
+      dispatch(updateRaceStatus(RaceStatuses.IDLE));
     } catch (e) {
       console.log(e);
     }

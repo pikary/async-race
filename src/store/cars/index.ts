@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Car, EngineStatuses, Race } from './types';
+import {
+  Car, EngineStatuses, Race, RaceStatuses,
+} from './types';
 import { SliceState } from '../types';
 import { generateRandomCars } from './helpers';
 import {
@@ -136,7 +138,7 @@ const CarsSlice = createSlice({
       state.race = {
         page: action.payload.currentPage,
         cars: action.payload.cars,
-        status: 'started',
+        status: RaceStatuses.STARTED,
         winner: null,
       };
       // console.log(state.race);

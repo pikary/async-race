@@ -4,7 +4,7 @@ import { RxUpdate } from 'react-icons/rx';
 import { useAppDispatch, useTypedSelector } from '../../../../store';
 import Button from '../../../../shared/Button';
 import Input from '../../../../shared/Input';
-import { createCarWithDefaults, Car } from '../../../../store/cars/types';
+import { createCarWithDefaults, Car, RaceStatuses } from '../../../../store/cars/types';
 import {
   updateSelectedCarColor,
   updateSelectedCarName,
@@ -69,7 +69,8 @@ function GarageHeader({
                 type="button"
                 onClick={handleRaceStart}
                 icon={<FaPlay />}
-                disabled={race?.status === 'started' || race?.status === 'finished'}
+                disabled={race?.status === RaceStatuses.STARTED
+                  || race?.status === RaceStatuses.FINISHED}
                 text="race"
               />
               <Button
@@ -132,6 +133,7 @@ function GarageHeader({
           <Button
             color="blue"
             text="generate cars"
+            disabled={race.status !== RaceStatuses.IDLE}
             className="garage__header__gen"
             onClick={handleGenerateCars}
           />

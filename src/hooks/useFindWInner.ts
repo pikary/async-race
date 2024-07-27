@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useAppDispatch, useTypedSelector } from '../store';
-import { EngineStatuses, Car } from '../store/cars/types';
+import { EngineStatuses, Car, RaceStatuses } from '../store/cars/types';
 import {
   createWinnerAsync,
   getWinnerAsync,
@@ -17,7 +17,7 @@ const useWinner = () => {
 
   useEffect(() => {
     if (
-      race.status !== 'finished'
+      race.status !== RaceStatuses.FINISHED
       && race.cars.length === cars?.length
       && race.cars.some((car) => car.engineStatus === EngineStatuses.FINISHED)
     ) {
@@ -28,7 +28,7 @@ const useWinner = () => {
         .sort((a, b) => a.distance / a.velocity - b.distance / b.velocity);
       const selectedWinner = sortedParticipants[0];
       setWinner(selectedWinner);
-      dispatch(updateRaceStatus('finished'));
+      dispatch(updateRaceStatus(RaceStatuses.FINISHED));
     }
   }, [race.cars, cars?.length, dispatch, race.status]);
 
