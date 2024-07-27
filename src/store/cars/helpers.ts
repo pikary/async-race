@@ -10,21 +10,30 @@ const getRandomColor = () => {
 };
 
 const getRandomCarName = () => {
-  const carNames = ['Toyota', 'Honda', 'Ford', 'Chevrolet', 'BMW', 'Audi', 'Mercedes', 'Nissan', 'Mazda', 'Tesla'];
+  const carNames = [
+    'Toyota',
+    'Honda',
+    'Ford',
+    'Chevrolet',
+    'BMW',
+    'Audi',
+    'Mercedes',
+    'Nissan',
+    'Mazda',
+    'Tesla',
+  ];
   const models = ['Corolla', 'F-150', 'Camaro', 'Civic', 'Model 3'];
 
-  return `${carNames[Math.floor(Math.random()
-    * carNames.length)]}  ${models[Math.floor(Math.random()
-    * models.length)]}`;
+  return `${carNames[Math.floor(Math.random() * carNames.length)]}  ${
+    models[Math.floor(Math.random() * models.length)]
+  }`;
 };
 
-const generateRandomCars = (count: number): Car[] => Array.from(
-  { length: count },
-  (_, id) => (createCarWithDefaults({
-    id,
-    name: getRandomCarName(),
-    color: getRandomColor(),
-  })),
-);
+// eslint-disable-next-line max-len
+const generateRandomCars = (count: number): Car[] => Array.from({ length: count }, (_, id) => createCarWithDefaults({
+  id,
+  name: getRandomCarName(),
+  color: getRandomColor(),
+}));
 
 export { generateRandomCars, getRandomCarName, getRandomColor };

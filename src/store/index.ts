@@ -4,12 +4,15 @@ import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 import CarsReducer from './cars';
 import WinnersReducer from './winners';
 
-const rootReducer = combineReducers({ cars: CarsReducer, winners: WinnersReducer });
+const rootReducer = combineReducers({
+  cars: CarsReducer,
+  winners: WinnersReducer,
+});
 
 const store = configureStore({ reducer: rootReducer });
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppStore = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;

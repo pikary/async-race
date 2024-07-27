@@ -7,10 +7,15 @@ import { createCarWithDefaults, EngineStatuses } from '../../store/cars/types';
 import './styles.scss';
 import {
   createRace,
-  setCurrentPage, updateCarList, updateRaceStatus,
+  setCurrentPage,
+  updateCarList,
+  updateRaceStatus,
 } from '../../store/cars';
 import {
-  createCarAsync, driveCarAsync, getCarsAsync, toggleCarEngineAsync,
+  createCarAsync,
+  driveCarAsync,
+  getCarsAsync,
+  toggleCarEngineAsync,
 } from '../../store/cars/api';
 import { generateRandomCars } from '../../store/cars/helpers';
 import Pagination from '../../components/Pagination';
@@ -22,12 +27,18 @@ const CARS_PER_PAGE = 7;
 function Garage() {
   const {
     data, currentPage, totalAmount, race,
-  } = useTypedSelector((state) => state.cars);
+  } = useTypedSelector(
+    (state) => state.cars,
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchGarageHandler = async () => {
-      if (data?.length !== 7) await dispatch(getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }));
+      if (data?.length !== 7) {
+        await dispatch(
+          getCarsAsync({ page: currentPage, limit: CARS_PER_PAGE }),
+        );
+      }
     };
     if (currentPage === race?.page) {
       dispatch(updateCarList(race.cars!));
@@ -38,11 +49,15 @@ function Garage() {
 
   const handleRaceStart = useCallback(async () => {
     try {
-      dispatch(createRace({ currentPage, cars: data || [createCarWithDefaults()] }));
-      const startEngineRequests = data!.map((car) => dispatch(toggleCarEngineAsync({
-        id: car.id!,
-        status: EngineStatuses.STARTED,
-      })));
+      dispatch(
+        createRace({ currentPage, cars: data || [createCarWithDefaults()] }),
+      );
+      const startEngineRequests = data!.map((car) => dispatch(
+        toggleCarEngineAsync({
+          id: car.id!,
+          status: EngineStatuses.STARTED,
+        }),
+      ));
 
       const startEngineResults = await Promise.all(startEngineRequests);
       startEngineResults.forEach(async (res) => {
@@ -53,14 +68,22 @@ function Garage() {
     }
   }, [data, currentPage, dispatch]);
 
-  const handleNextPage = useCallback(() => dispatch(setCurrentPage(currentPage + 1)), [currentPage, dispatch]);
-  const handlePreviousPage = useCallback(() => dispatch(setCurrentPage(currentPage - 1)), [currentPage, dispatch]);
+  const handleNextPage = useCallback(
+    () => dispatch(setCurrentPage(currentPage + 1)),
+    [currentPage, dispatch],
+  );
+  const handlePreviousPage = useCallback(
+    () => dispatch(setCurrentPage(currentPage - 1)),
+    [currentPage, dispatch],
+  );
 
   const handleGenerateCars = useCallback(async () => {
     const randomCars = generateRandomCars(100);
     const requests = randomCars.map((car) => dispatch(createCarAsync(car)));
     try {
-      await Promise.all(requests.map((p) => p.then(unwrapResult).catch((e) => e)));
+      await Promise.all(
+        requests.map((p) => p.then(unwrapResult).catch((e) => e)),
+      );
     } catch (error) {
       console.error('Error generating cars:', error);
     }
@@ -68,10 +91,12 @@ function Garage() {
 
   const handleReset = useCallback(async () => {
     try {
-      const requests = data!.map((car) => dispatch(toggleCarEngineAsync({
-        id: car.id,
-        status: EngineStatuses.STOPPED,
-      })));
+      const requests = data!.map((car) => dispatch(
+        toggleCarEngineAsync({
+          id: car.id,
+          status: EngineStatuses.STOPPED,
+        }),
+      ));
       await Promise.all(requests);
       dispatch(updateRaceStatus('idle'));
     } catch (e) {
@@ -89,12 +114,10 @@ function Garage() {
           <div className="garage__race">
               <GarageBoundary />
               <div style={{ marginBottom: 30 }}>
-                  {(!data || data.length === 0) ? (
+                  {!data || data.length === 0 ? (
                       <h4 className="garage__race__err">No cars</h4>
                   ) : (
-                    data.map((car) => (
-                        <Track key={car.id} car={car} />
-                    ))
+                    data.map((car) => <Track key={car.id} car={car} />)
                   )}
               </div>
               <GarageBoundary />

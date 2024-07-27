@@ -7,14 +7,13 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   labelText: string;
 }
-function Input({ labelText, ...props }:InputProps) {
+function Input({ labelText, ...props }: InputProps) {
   return (
       <input
         {...props}
         id={props.name}
         className={classNames('input', props.className)}
       />
-
   );
 }
 

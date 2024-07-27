@@ -1,91 +1,91 @@
 .garage__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  &__control-btns {
     display: flex;
-    justify-content: space-between;
+    gap: 10px;
+
+    button {
+      // height: 50px;
+    }
+  }
+  &__form-cont {
+    display: flex;
+    gap: 30px;
+
+    &__form {
+      display: flex;
+      gap: 10px;
+
+      &-input {
+        width: 150px;
+        max-height: fit-content;
+      }
+    }
+
+    input[type="color"] {
+      grid-area: color;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+  }
+
+  &__gen {
+    width: fit-content;
+  }
+
+  @media screen and (max-width: 1240px) {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 1fr 1fr;
     gap: 10px;
 
     &__control-btns {
-        display: flex;
-        gap: 10px;
-
-        button {
-            // height: 50px;
-        }
-    }
-    &__form-cont {
-        display: flex;
-        gap: 30px;
-
-        &__form {
-            display: flex;
-            gap: 10px;
-
-            &-input {
-                width: 150px;
-                max-height: fit-content;
-            }
-        }
-
-        input[type="color"] {
-            grid-area: color;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-        }
+      grid-column: 1 / 7;
+      grid-row: 1;
     }
 
     &__gen {
-        width: fit-content;
+      grid-column: 1 / 7;
+      grid-row: 2;
     }
 
-    @media screen and (max-width: 1240px) {
-        display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        grid-template-rows: 1fr 1fr;
-        gap: 10px;
+    &__form-cont {
+      justify-self: end;
+      grid-column: 7 / 13;
+      grid-row: 1 / -1;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
 
-        &__control-btns {
-            grid-column: 1 / 7;
-            grid-row: 1;
-        }
+  @media screen and (max-width: 768px) {
+    grid-template-rows: auto auto;
+    row-gap: 20px;
 
-        &__gen {
-            grid-column: 1 / 7;
-            grid-row: 2;
-        }
+    // button {
+    //     height: fit-content;
+    // }
 
-        &__form-cont {
-            justify-self: end;
-            grid-column: 7 / 13;
-            grid-row: 1 / -1;
-            flex-direction: column;
-            gap: 10px;
-        }
+    &__control-btns {
+      grid-column: 1 / 7;
+      grid-row: 1;
+      height: fit-content;
     }
 
-    @media screen and (max-width: 768px) {
-        grid-template-rows: auto auto;
-        row-gap: 20px;
-
-        // button {
-        //     height: fit-content;
-        // }
-
-        &__control-btns {
-            grid-column: 1 / 7;
-            grid-row: 1;
-            height: fit-content;
-        }
-
-        &__gen {
-            grid-column: 7 / 13;
-            justify-self: end;
-            grid-row: 1;
-        }
-
-        &__form-cont {
-            justify-self: start; /* Align the form container to the start of the grid area */
-            grid-column: 1 / -1; /* Span across all columns */
-            grid-row: 2; /* Span both rows */
-        }
+    &__gen {
+      grid-column: 7 / 13;
+      justify-self: end;
+      grid-row: 1;
     }
+
+    &__form-cont {
+      justify-self: start; /* Align the form container to the start of the grid area */
+      grid-column: 1 / -1; /* Span across all columns */
+      grid-row: 2; /* Span both rows */
+    }
+  }
 }

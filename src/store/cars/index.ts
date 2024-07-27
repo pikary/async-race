@@ -4,7 +4,10 @@ import { Car, EngineStatuses, Race } from './types';
 import { SliceState } from '../types';
 import { generateRandomCars } from './helpers';
 import {
-  getCarsAsync, createCarAsync, deleteCarAsync, updateCarAsync,
+  getCarsAsync,
+  createCarAsync,
+  deleteCarAsync,
+  updateCarAsync,
   toggleCarEngineAsync,
   driveCarAsync,
 } from './api';
@@ -15,10 +18,10 @@ interface FormState {
   color: string;
 }
 interface CarsSliceState extends SliceState<Car[] | undefined> {
-  currentPage: number,
-  totalAmount: number,
-  selectedCar: Car | null,
-  race: Race,
+  currentPage: number;
+  totalAmount: number;
+  selectedCar: Car | null;
+  race: Race;
   createform: FormState;
   updateForm: FormState;
 }
@@ -49,10 +52,16 @@ const CarsSlice = createSlice({
   name: 'cars',
   initialState,
   reducers: {
-    setCreateFormField(state, action: PayloadAction<{ field: keyof FormState, value: string }>) {
+    setCreateFormField(
+      state,
+      action: PayloadAction<{ field: keyof FormState; value: string }>,
+    ) {
       state.createform[action.payload.field] = action.payload.value;
     },
-    setUpdateFormField(state, action: PayloadAction<{ field: keyof FormState, value: string }>) {
+    setUpdateFormField(
+      state,
+      action: PayloadAction<{ field: keyof FormState; value: string }>,
+    ) {
       state.updateForm[action.payload.field] = action.payload.value;
     },
     clearForm(state) {
@@ -101,7 +110,10 @@ const CarsSlice = createSlice({
         state.selectedCar.color = action.payload;
       }
     },
-    updateCarProgress: (state, action: PayloadAction<{ id: number, progress: string }>) => {
+    updateCarProgress: (
+      state,
+      action: PayloadAction<{ id: number; progress: string }>,
+    ) => {
       const car = state.race?.cars.find((el) => el.id === action.payload.id);
       // console.log('I AM UPDATING');
 
@@ -117,7 +129,10 @@ const CarsSlice = createSlice({
         car!.engineStatus = EngineStatuses.STOPPED;
       }
     },
-    createRace: (state, action: PayloadAction<{ currentPage: number, cars: Car[] }>) => {
+    createRace: (
+      state,
+      action: PayloadAction<{ currentPage: number; cars: Car[] }>,
+    ) => {
       state.race = {
         page: action.payload.currentPage,
         cars: action.payload.cars,
@@ -126,10 +141,10 @@ const CarsSlice = createSlice({
       };
       // console.log(state.race);
     },
-    updateRaceParticipants: (state, action:PayloadAction<{car:Car}>) => {
+    updateRaceParticipants: (state, action: PayloadAction<{ car: Car }>) => {
       state.race.cars.push(action.payload.car);
     },
-    updateRaceStatus: (state, action:PayloadAction<string>) => {
+    updateRaceStatus: (state, action: PayloadAction<string>) => {
       state.race.status = action.payload;
     },
     updateCarList: (state, action: PayloadAction<Car[]>) => {
@@ -196,7 +211,9 @@ const CarsSlice = createSlice({
       .addCase(updateCarAsync.fulfilled, (state, action) => {
         state.isLoading = false;
         if (state.data) {
-          const index = state.data.findIndex((car) => car.id === action.payload?.id);
+          const index = state.data.findIndex(
+            (car) => car.id === action.payload?.id,
+          );
           if (index >= 0) {
             state.data[index] = action.payload!;
           }
@@ -208,7 +225,9 @@ const CarsSlice = createSlice({
       })
       .addCase(toggleCarEngineAsync.fulfilled, (state, action) => {
         if (state.data) {
-          const index = state.data.findIndex((car) => car.id === action.meta.arg.id);
+          const index = state.data.findIndex(
+            (car) => car.id === action.meta.arg.id,
+          );
           if (action.meta.arg.status === EngineStatuses.STOPPED) {
             if (index >= 0) {
               state.data[index] = {
@@ -245,11 +264,19 @@ const CarsSlice = createSlice({
       })
       .addCase(toggleCarEngineAsync.rejected, (state, action) => {
         if (state.data) {
-          const index = state.data.findIndex((car) => car.id === action.meta.arg.id);
+          const index = state.data.findIndex(
+            (car) => car.id === action.meta.arg.id,
+          );
 
           if (index >= 0) {
-            state.data[index] = { ...state.data[index], engineStatus: EngineStatuses.STOPPED };
-            state.race.cars[index] = { ...state.data[index], engineStatus: EngineStatuses.STOPPED };
+            state.data[index] = {
+              ...state.data[index],
+              engineStatus: EngineStatuses.STOPPED,
+            };
+            state.race.cars[index] = {
+              ...state.data[index],
+              engineStatus: EngineStatuses.STOPPED,
+            };
           }
         }
       })
@@ -308,7 +335,10 @@ export const {
   updateCarList,
   updateRaceStatus,
   updateRaceParticipants,
-  setCreateFormField, setUpdateFormField, clearForm, clearUpdateForm,
+  setCreateFormField,
+  setUpdateFormField,
+  clearForm,
+  clearUpdateForm,
 } = CarsSlice.actions;
 
 export default CarsSlice.reducer;

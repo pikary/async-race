@@ -1,58 +1,54 @@
 .pagination {
-    padding-top: 20px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h4 {
+    display: block;
+    font-size: var(--font-size-xl);
+    color: rgba(187, 155, 203, 1);
+    text-shadow: 2px 2px 15px rgb(252, 16, 146);
+    font-weight: 400;
+  }
+
+  &__controls {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 5px;
 
-    h4 {
-        display: block;
-        font-size: var(--font-size-xl);
-        color: rgba(187, 155, 203, 1);
-        text-shadow: 2px 2px 15px rgb(252, 16, 146);
-        font-weight: 400;
-    }
-
-    &__controls {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-
-        &__btn {
-            &.disabled {
-                svg {
-                    transition: color 0.2s ease-in-out;
-                    color: gray;
-                }
-
-                &:hover {
-                    svg {
-                        color: gray;
-                        filter: none;
-                    }
-                }
-            }
-
-            svg {
-                transition: color 0.2s ease-in-out;
-                color: #A1C6D4;
-            }
-
-            &:hover {
-                svg {
-                    color: #BB9BCB;
-                    filter: drop-shadow(4px 5px 15px rgba(252, 16, 146, 0.7));
-                }
-            }
+    &__btn {
+      &.disabled {
+        svg {
+          transition: color 0.2s ease-in-out;
+          color: gray;
         }
+
+        &:hover {
+          svg {
+            color: gray;
+            filter: none;
+          }
+        }
+      }
+
+      svg {
+        transition: color 0.2s ease-in-out;
+        color: #a1c6d4;
+      }
+
+      &:hover {
+        svg {
+          color: #bb9bcb;
+          filter: drop-shadow(4px 5px 15px rgba(252, 16, 146, 0.7));
+        }
+      }
     }
+  }
 
-    @media screen and (max-width: 768px) {
-
-        flex-direction: column;
-        flex-flow: column-reverse;
-        row-gap: 15px;
-    }
-
-
-
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    flex-flow: column-reverse;
+    row-gap: 15px;
+  }
 }

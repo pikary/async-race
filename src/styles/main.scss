@@ -1,4 +1,4 @@
-@import './normalize.css';
+@import "./normalize.css";
 
 @font-face {
   font-family: "OpenSans";
@@ -30,11 +30,10 @@ html {
   scroll-behavior: smooth;
 }
 
-@media screen and (max-width:768px){
-  html{
+@media screen and (max-width: 768px) {
+  html {
     font-size: 13px;
   }
-  
 }
 //70px - navbar height
 
@@ -43,25 +42,22 @@ html {
   --font-size-l: 1.5rem; /* 24px */
   --font-size-m: 1.125rem; /* 18px */
   --font-size-sm: 0.875rem; /* 14px */
-  --background-color:#171C4B;
+  --background-color: #171c4b;
 }
 
 body {
   font-family: Arial, sans-serif;
   background-color: var(--background-color);
   font-size: var(--font-size-m);
-  background: url('../assets/background.jpg');
+  background: url("../assets/background.jpg");
   background-size: cover;
-}/*# sourceMappingURL=main.css.map */
+} /*# sourceMappingURL=main.css.map */
 
-ul{
+ul {
   list-style-type: none;
 }
 
-
-
-
-main{
+main {
   max-width: 1240px;
   margin: 0 auto;
   padding: 0 40px;

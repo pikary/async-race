@@ -12,7 +12,7 @@ function Header() {
   const headerRef = useRef<HTMLHeadElement>(null);
   const [arrowCount, setArrowCount] = useState(0);
 
-  const navigateTo = (route:string) => {
+  const navigateTo = (route: string) => {
     navigate(`/${route}`);
   };
   useEffect(() => {
@@ -54,7 +54,9 @@ function Header() {
               />
           </div>
           <div className="header__arrows">
-              {Array.from({ length: arrowCount }).map(() => <Arrow size="small" color="pink" />)}
+              {Array.from({ length: arrowCount }).map(() => (
+                  <Arrow size="small" color="pink" />
+              ))}
           </div>
           <div className="header__logo">
               <div className="header__logo__container">
@@ -69,11 +71,11 @@ function Header() {
                   Async Race
 
               </div> */}
-
           </div>
           <div className="header__arrows">
-              {Array.from({ length: arrowCount }).map(() => <Arrow size="small" color="blue" />)}
-
+              {Array.from({ length: arrowCount }).map(() => (
+                  <Arrow size="small" color="blue" />
+              ))}
           </div>
       </header>
   );

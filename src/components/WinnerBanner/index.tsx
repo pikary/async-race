@@ -3,13 +3,13 @@
 import React, { useEffect, useRef } from 'react';
 import './styles.scss';
 
-interface WinnerBannerProps{
-  winnerName:string,
-  time:string,
-  closeBanner:()=>void
+interface WinnerBannerProps {
+  winnerName: string;
+  time: string;
+  closeBanner: () => void;
 }
 
-function WinnerBanner({ winnerName, time, closeBanner }:WinnerBannerProps) {
+function WinnerBanner({ winnerName, time, closeBanner }: WinnerBannerProps) {
   const bannerOuter = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleUnmount = (e: MouseEvent) => {
@@ -42,7 +42,6 @@ function WinnerBanner({ winnerName, time, closeBanner }:WinnerBannerProps) {
               </div>
           </div>
       </div>
-
   );
 }
 

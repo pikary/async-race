@@ -11,8 +11,11 @@ interface PaginationProps {
 }
 
 function Pagination({
-  currentPage, totalAmount, onNextPage, onPreviousPage,
-}:PaginationProps) {
+  currentPage,
+  totalAmount,
+  onNextPage,
+  onPreviousPage,
+}: PaginationProps) {
   return (
       <div className="pagination">
           <h4>
@@ -21,12 +24,22 @@ function Pagination({
               )
           </h4>
           <div className="pagination__controls">
-              <Button className="pagination__controls__btn" text="" onClick={onPreviousPage} icon={<BiLeftArrow size={25} />} />
+              <Button
+                className="pagination__controls__btn"
+                text=""
+                onClick={onPreviousPage}
+                icon={<BiLeftArrow size={25} />}
+              />
               <h4>
                   PAGE #
                   {currentPage}
               </h4>
-              <Button className="pagination__controls__btn" text="" onClick={onNextPage} icon={<BiRightArrow size={25} />} />
+              <Button
+                className="pagination__controls__btn"
+                text=""
+                onClick={onNextPage}
+                icon={<BiRightArrow size={25} />}
+              />
           </div>
       </div>
   );

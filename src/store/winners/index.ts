@@ -5,12 +5,12 @@ import { SliceState } from '../types';
 import { getWinnersAsync, updateWinnerAsync, createWinnerAsync } from './api';
 import { isApiError } from '../../utils/baseApi';
 
-interface WinnersSliceState extends SliceState<Winner[]|undefined> {
-  currentPage:number,
-  totalAmount:number,
-  sort:SortTypes,
-  order:OrderTypes,
-  filter:Record<SortTypes, {active:boolean, order:OrderTypes}>
+interface WinnersSliceState extends SliceState<Winner[] | undefined> {
+  currentPage: number;
+  totalAmount: number;
+  sort: SortTypes;
+  order: OrderTypes;
+  filter: Record<SortTypes, { active: boolean; order: OrderTypes }>;
 }
 const initialState: WinnersSliceState = {
   isLoading: false,
@@ -31,20 +31,23 @@ const WinnerSlice = createSlice({
   name: 'winners',
   initialState,
   reducers: {
-    setCurrentPage: (state, action:PayloadAction<number>) => {
+    setCurrentPage: (state, action: PayloadAction<number>) => {
       const maxPages = Math.ceil(state.totalAmount / 7);
       if (action.payload === 0 || action.payload > maxPages) {
         return;
       }
       state.currentPage = action.payload;
     },
-    setSortType: (state, action:PayloadAction<SortTypes>) => {
+    setSortType: (state, action: PayloadAction<SortTypes>) => {
       state.sort = action.payload;
     },
-    setOrderType: (state, action:PayloadAction<OrderTypes>) => {
+    setOrderType: (state, action: PayloadAction<OrderTypes>) => {
       state.order = action.payload;
     },
-    setTableFilters: (state, action:PayloadAction<{order:OrderTypes, sort:SortTypes}>) => {
+    setTableFilters: (
+      state,
+      action: PayloadAction<{ order: OrderTypes; sort: SortTypes }>,
+    ) => {
       state.sort = action.payload.sort;
       state.order = action.payload.order;
     },
@@ -87,14 +90,15 @@ const WinnerSlice = createSlice({
     });
     builder.addCase(updateWinnerAsync.fulfilled, (state, action) => {
       if (state.data) {
-        const index = state.data.findIndex((winner) => winner.id === action.payload?.id);
+        const index = state.data.findIndex(
+          (winner) => winner.id === action.payload?.id,
+        );
         if (index >= 0) {
           state.data[index] = action.payload!;
         }
       }
     });
   },
-
 });
 
 export const {

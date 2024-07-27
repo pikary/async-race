@@ -3,12 +3,16 @@ import baseRequest, { ApiError, isApiError } from '../../utils/baseApi';
 import { OrderTypes, SortTypes, Winner } from './types';
 import { Car } from '../cars/types';
 
-interface GetWinnersResponse{
-  winners: Winner[],
-  totalCount:number
+interface GetWinnersResponse {
+  winners: Winner[];
+  totalCount: number;
 }
 
-export const getWinnerAsync = createAsyncThunk<Winner|undefined, number, { rejectValue: ApiError |string}>('winners/getone', async (id, thunkAPI) => {
+export const getWinnerAsync = createAsyncThunk<
+  Winner | undefined,
+  number,
+  { rejectValue: ApiError | string }
+>('winners/getone', async (id, thunkAPI) => {
   try {
     const result = await baseRequest<Winner>('GET', `winners/${id}`, null);
     return result?.data;
@@ -22,22 +26,37 @@ export const getWinnerAsync = createAsyncThunk<Winner|undefined, number, { rejec
   }
 });
 
-export const getWinnersAsync = createAsyncThunk<GetWinnersResponse, { page: number, limit: number, sort:SortTypes, order:OrderTypes }, { rejectValue: string }>('winners/get', async (reqBody, thunkAPI) => {
+export const getWinnersAsync = createAsyncThunk<
+  GetWinnersResponse,
+  { page: number; limit: number; sort: SortTypes; order: OrderTypes },
+  { rejectValue: string }
+>('winners/get', async (reqBody, thunkAPI) => {
   try {
-    const result = await baseRequest<Winner[]>('GET', `winners?_page=${reqBody.page}&_limit=${reqBody.limit}&_sort=${reqBody.sort}&_order=${reqBody.order}`);
+    const result = await baseRequest<Winner[]>(
+      'GET',
+      `winners?_page=${reqBody.page}&_limit=${reqBody.limit}&_sort=${reqBody.sort}&_order=${reqBody.order}`,
+    );
 
     // get total items cound from header
     if (result) {
       const { headers, data } = result!;
       const totalCount = headers.get('X-Total-Count');
-      const winnersWithCars = await Promise.all(data.map(async (winner) => {
-        // const winnerResult = await baseRequest<Winner>('GET', `winners/${winner.id}`);
-        const carResult = await baseRequest<Car>('GET', `garage/${winner?.id}`);
-        return { ...winner, car: carResult?.data };
-      }));
+      const winnersWithCars = await Promise.all(
+        data.map(async (winner) => {
+          // const winnerResult = await baseRequest<Winner>('GET', `winners/${winner.id}`);
+          const carResult = await baseRequest<Car>(
+            'GET',
+            `garage/${winner?.id}`,
+          );
+          return { ...winner, car: carResult?.data };
+        }),
+      );
       // console.log(result.data);
 
-      return { winners: winnersWithCars, totalCount: +totalCount! } as GetWinnersResponse;
+      return {
+        winners: winnersWithCars,
+        totalCount: +totalCount!,
+      } as GetWinnersResponse;
     }
     return thunkAPI.rejectWithValue('No winners found');
   } catch (e) {
@@ -45,41 +64,55 @@ export const getWinnersAsync = createAsyncThunk<GetWinnersResponse, { page: numb
   }
 });
 
-export const createWinnerAsync = createAsyncThunk<Winner, Winner, {rejectValue:ApiError|string}>(
-  'winners/create',
-  async (reqbody, thunkAPI) => {
-    try {
-      const result = await baseRequest<Winner>('POST', 'winners', reqbody);
-      if (result) {
-        return result.data;
-      }
-      return thunkAPI.rejectWithValue('asd');
-    } catch (e) {
-      if (isApiError(e)) {
-        return thunkAPI.rejectWithValue({ statusCode: e.statusCode, message: e.message, name: '' });
-      }
-      return thunkAPI.rejectWithValue((e as Error).message);
+export const createWinnerAsync = createAsyncThunk<
+  Winner,
+  Winner,
+  { rejectValue: ApiError | string }
+>('winners/create', async (reqbody, thunkAPI) => {
+  try {
+    const result = await baseRequest<Winner>('POST', 'winners', reqbody);
+    if (result) {
+      return result.data;
     }
-  },
-);
+    return thunkAPI.rejectWithValue('asd');
+  } catch (e) {
+    if (isApiError(e)) {
+      return thunkAPI.rejectWithValue({
+        statusCode: e.statusCode,
+        message: e.message,
+        name: '',
+      });
+    }
+    return thunkAPI.rejectWithValue((e as Error).message);
+  }
+});
 
-export const updateWinnerAsync = createAsyncThunk<Winner, Winner, {rejectValue:string | ApiError}>(
-  'winners/update',
-  async (reqbody, thunkAPI) => {
-    try {
-      const result = await baseRequest<Winner>('PUT', `winners/${reqbody.id}`, reqbody);
-      if (result) {
-        return result.data;
-      }
-      return thunkAPI.rejectWithValue('asd');
-    } catch (e) {
-      if (isApiError(e)) {
-        return thunkAPI.rejectWithValue({ statusCode: e.statusCode, message: e.message, name: '' });
-      }
-      return thunkAPI.rejectWithValue((e as Error).message);
+export const updateWinnerAsync = createAsyncThunk<
+  Winner,
+  Winner,
+  { rejectValue: string | ApiError }
+>('winners/update', async (reqbody, thunkAPI) => {
+  try {
+    const result = await baseRequest<Winner>(
+      'PUT',
+      `winners/${reqbody.id}`,
+      reqbody,
+    );
+    if (result) {
+      return result.data;
     }
-  },
-);
+    return thunkAPI.rejectWithValue('asd');
+  } catch (e) {
+    if (isApiError(e)) {
+      return thunkAPI.rejectWithValue({
+        statusCode: e.statusCode,
+        message: e.message,
+        name: '',
+      });
+    }
+    return thunkAPI.rejectWithValue((e as Error).message);
+  }
+});
 
 export const a = 2;
 export {};

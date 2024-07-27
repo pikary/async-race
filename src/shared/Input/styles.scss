@@ -1,14 +1,14 @@
-.input{
-    height: 100%;
-    border-radius: 5px;
-    border: none;
-    padding: 5px 10px;
-    outline-width: 0;
-    transition: all ease-in-out 0.3s;
-    font-size: var(--font-size-m);
-    &:focus{
-        outline-width: 1px;
-        outline-color: #BB9BCB;
-        box-shadow:0px 0px 45px 10px #BB9BCB;
-    }
+.input {
+  height: 100%;
+  border-radius: 5px;
+  border: none;
+  padding: 5px 10px;
+  outline-width: 0;
+  transition: all ease-in-out 0.3s;
+  font-size: var(--font-size-m);
+  &:focus {
+    outline-width: 1px;
+    outline-color: #bb9bcb;
+    box-shadow: 0px 0px 45px 10px #bb9bcb;
+  }
 }

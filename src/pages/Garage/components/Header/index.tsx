@@ -6,12 +6,12 @@ import Button from '../../../../shared/Button';
 import Input from '../../../../shared/Input';
 import { createCarWithDefaults, Car } from '../../../../store/cars/types';
 import {
-  updateSelectedCarColor, updateSelectedCarName, setCreateFormField,
+  updateSelectedCarColor,
+  updateSelectedCarName,
+  setCreateFormField,
   clearForm,
 } from '../../../../store/cars';
-import {
-  createCarAsync, updateCarAsync,
-} from '../../../../store/cars/api';
+import { createCarAsync, updateCarAsync } from '../../../../store/cars/api';
 import './styles.scss';
 
 interface GarageHeaderProps {
@@ -21,9 +21,13 @@ interface GarageHeaderProps {
 }
 
 function GarageHeader({
-  handleRaceStart, handleReset, handleGenerateCars,
-}:GarageHeaderProps) {
-  const { selectedCar, race, createform } = useTypedSelector((state) => state.cars);
+  handleRaceStart,
+  handleReset,
+  handleGenerateCars,
+}: GarageHeaderProps) {
+  const { selectedCar, race, createform } = useTypedSelector(
+    (state) => state.cars,
+  );
   const dispatch = useAppDispatch();
   const [carName, setCarName] = useState('');
   const [color, setColor] = useState('');
@@ -77,18 +81,60 @@ function GarageHeader({
               />
           </div>
           <div className="garage__header__form-cont">
-              <form className="garage__header__form-cont__form garage__header__form-cont-create" onSubmit={handleCreateCar}>
-                  <Input className="garage__header__form-cont__form-input" type="text" name="create-car" placeholder="Car brand" labelText="" onChange={handleCarNameChange} value={createform.name} />
-                  <input type="color" onChange={handleColorChange} value={createform.color} />
+              <form
+                className="garage__header__form-cont__form garage__header__form-cont-create"
+                onSubmit={handleCreateCar}
+              >
+                  <Input
+                    className="garage__header__form-cont__form-input"
+                    type="text"
+                    name="create-car"
+                    placeholder="Car brand"
+                    labelText=""
+                    onChange={handleCarNameChange}
+                    value={createform.name}
+                  />
+                  <input
+                    type="color"
+                    onChange={handleColorChange}
+                    value={createform.color}
+                  />
                   <Button color="pink" text="create" type="submit" />
               </form>
-              <form className="garage__header__form-cont__form garage__header__form-cont-update" onSubmit={handleUpdateCar}>
-                  <Input disabled={selectedCar === null} className="garage__header__form-cont__form-input" value={selectedCar?.name} onChange={(e) => dispatch(updateSelectedCarName(e.target.value))} type="text" name="update-car" placeholder="Car brand" labelText="" />
-                  <input disabled={selectedCar === null} type="color" value={selectedCar?.color} onChange={(e) => dispatch(updateSelectedCarColor(e.target.value))} />
-                  <Button disabled={selectedCar === null} color="pink" text="update" type="submit" />
+              <form
+                className="garage__header__form-cont__form garage__header__form-cont-update"
+                onSubmit={handleUpdateCar}
+              >
+                  <Input
+                    disabled={selectedCar === null}
+                    className="garage__header__form-cont__form-input"
+                    value={selectedCar?.name}
+                    onChange={(e) => dispatch(updateSelectedCarName(e.target.value))}
+                    type="text"
+                    name="update-car"
+                    placeholder="Car brand"
+                    labelText=""
+                  />
+                  <input
+                    disabled={selectedCar === null}
+                    type="color"
+                    value={selectedCar?.color}
+                    onChange={(e) => dispatch(updateSelectedCarColor(e.target.value))}
+                  />
+                  <Button
+                    disabled={selectedCar === null}
+                    color="pink"
+                    text="update"
+                    type="submit"
+                  />
               </form>
           </div>
-          <Button color="blue" text="generate cars" className="garage__header__gen" onClick={handleGenerateCars} />
+          <Button
+            color="blue"
+            text="generate cars"
+            className="garage__header__gen"
+            onClick={handleGenerateCars}
+          />
       </div>
   );
 }

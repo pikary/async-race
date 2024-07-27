@@ -1,5 +1,5 @@
-export interface SliceState<T>{
+export interface SliceState<T> {
   isLoading: boolean;
   data: T;
-  error: string | null |undefined;
+  error: string | null | undefined;
 }

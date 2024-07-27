@@ -5,36 +5,50 @@ interface Config {
   signal?: AbortSignal;
   [key: string]: any;
 }
-interface ApiResponse<ReturnType>{
+interface ApiResponse<ReturnType> {
   data: ReturnType;
   headers: Headers;
   statusCode: number;
 }
 
-export interface ApiError extends Error{
-  statusCode:number,
-  message:string
+export interface ApiError extends Error {
+  statusCode: number;
+  message: string;
 }
-function ApiErrorFactory(statusCode:number, message:string):ApiError {
+function ApiErrorFactory(statusCode: number, message: string): ApiError {
   return {
-    statusCode, message, name: 'a',
+    statusCode,
+    message,
+    name: 'a',
   };
 }
 export function isApiError(error: any): error is ApiError {
-  return error && typeof error.message === 'string' && typeof error.statusCode === 'number' && typeof error.name === 'string';
+  return (
+    error
+    && typeof error.message === 'string'
+    && typeof error.statusCode === 'number'
+    && typeof error.name === 'string'
+  );
 }
 
-export interface AbortError extends Error{
-  message:string,
-  id:number
+export interface AbortError extends Error {
+  message: string;
+  id: number;
 }
-export function AbortErrorFactory(id:number, message:string):AbortError {
+export function AbortErrorFactory(id: number, message: string): AbortError {
   return {
-    id, message, name: 'AbortError',
+    id,
+    message,
+    name: 'AbortError',
   };
 }
 export function isAbortError(error: any): error is AbortError {
-  return error && typeof error.message === 'string' && typeof error.id === 'number' && typeof error.name === 'string';
+  return (
+    error
+    && typeof error.message === 'string'
+    && typeof error.id === 'number'
+    && typeof error.name === 'string'
+  );
 }
 
 const baseRequest = async <ReturnType>(

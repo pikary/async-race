@@ -1,28 +1,28 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
-export type EngineStatus = 'started' | 'stopped' | 'drive'
-export enum EngineStatuses{
-  STARTED='started',
-  STOPPED='stopped',
-  CRASHED='crashed',
-  DRIVE='drive',
-  FINISHED='finished'
+export type EngineStatus = 'started' | 'stopped' | 'drive';
+export enum EngineStatuses {
+  STARTED = 'started',
+  STOPPED = 'stopped',
+  CRASHED = 'crashed',
+  DRIVE = 'drive',
+  FINISHED = 'finished',
 }
-export interface Car{
-  name:string,
-  color:string,
-  id:number,
-  velocity:number,
-  distance:number,
-  engineStatus:EngineStatuses,
-  progress:string|null,
+export interface Car {
+  name: string;
+  color: string;
+  id: number;
+  velocity: number;
+  distance: number;
+  engineStatus: EngineStatuses;
+  progress: string | null;
 }
 
-export interface Race{
-  cars:Car[],
-  status:string,
-  page: number,
-  winner:Car|null
+export interface Race {
+  cars: Car[];
+  status: string;
+  page: number;
+  winner: Car | null;
 }
 
 const defaultCar: Car = {

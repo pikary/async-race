@@ -2,14 +2,14 @@ import React, { ReactNode } from 'react';
 import './styles.scss';
 import classnames from 'classnames';
 
-type ButtonType = 'pink' | 'blue'
+type ButtonType = 'pink' | 'blue';
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  icon?: ReactNode | null,
-  text?: string,
-  className?: string,
-  onClick?: () => void,
-  shortenText?:string,
-  color?: ButtonType
+  icon?: ReactNode | null;
+  text?: string;
+  className?: string;
+  onClick?: () => void;
+  shortenText?: string;
+  color?: ButtonType;
 }
 
 function Button(props: ButtonProps) {
@@ -34,7 +34,9 @@ function Button(props: ButtonProps) {
                   <p className="button__mob-view">{shortenText}</p>
                   <p className="button__pc-view">{text}</p>
               </>
-          ) : text && <p>{text}</p> }
+          ) : (
+            text && <p>{text}</p>
+          )}
           {icon}
       </button>
   );
@@ -43,7 +45,7 @@ function Button(props: ButtonProps) {
 Button.defaultProps = {
   icon: null,
   className: '',
-  onClick: () => { },
+  onClick: () => {},
   color: '',
   text: '',
   shortenText: '',

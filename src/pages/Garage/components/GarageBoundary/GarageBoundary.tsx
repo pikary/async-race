@@ -26,7 +26,7 @@ function GarageBoundary() {
       <Arrow
         key={index}
         size="small"
-        color={(index % 8 < 4 || index % 8 >= 8) ? 'pink' : 'blue'}
+        color={index % 8 < 4 || index % 8 >= 8 ? 'pink' : 'blue'}
       />
   ));
 
