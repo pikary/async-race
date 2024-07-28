@@ -4,7 +4,6 @@ import {
   Car, EngineStatuses, Race, RaceStatuses,
 } from './types';
 import { SliceState } from '../types';
-import { generateRandomCars } from './helpers';
 import {
   getCarsAsync,
   createCarAsync,
@@ -13,7 +12,7 @@ import {
   toggleCarEngineAsync,
   driveCarAsync,
 } from './api';
-import { isAbortError, isApiError } from '../../utils/baseApi';
+import { isAbortError, isApiError } from '../../utils/baseApi/types';
 
 interface FormState {
   name: string;
@@ -60,33 +59,8 @@ const CarsSlice = createSlice({
     ) {
       state.createform[action.payload.field] = action.payload.value;
     },
-    setUpdateFormField(
-      state,
-      action: PayloadAction<{ field: keyof FormState; value: string }>,
-    ) {
-      state.updateForm[action.payload.field] = action.payload.value;
-    },
     clearForm(state) {
       state.createform = { name: '', color: '' };
-    },
-    clearUpdateForm(state) {
-      state.updateForm = { name: '', color: '' };
-    },
-    createCar: (state, action: PayloadAction<Car>) => {
-      state.data?.push(action.payload);
-    },
-    deleteCar: (state, action: PayloadAction<number>) => {
-      if (state.data) {
-        state.data = state.data.filter((car) => car.id !== action.payload);
-      }
-    },
-    generateCars: (state) => {
-      const generatedCars = generateRandomCars(100);
-      if (state.data) {
-        state.data = state.data.concat(generatedCars);
-      } else {
-        state.data = generatedCars;
-      }
     },
     setCurrentPage: (state, action: PayloadAction<number>) => {
       const maxPages = Math.ceil(state.totalAmount / 7);
@@ -227,41 +201,24 @@ const CarsSlice = createSlice({
       })
       .addCase(toggleCarEngineAsync.fulfilled, (state, action) => {
         if (state.data) {
+          const { status } = action.meta.arg;
           const index = state.data.findIndex(
             (car) => car.id === action.meta.arg.id,
           );
-          if (action.meta.arg.status === EngineStatuses.STOPPED) {
-            if (index >= 0) {
-              state.data[index] = {
-                ...state.data[index],
-                engineStatus: action.meta.arg.status,
-                velocity: 0,
-                distance: 0,
-              };
-            }
-            state.race.cars[index] = {
+          if (index >= 0) {
+            state.data[index] = {
               ...state.data[index],
               engineStatus: action.meta.arg.status,
-              velocity: 0,
-              distance: 0,
+              velocity: status === EngineStatuses.STOPPED ? 0 : action.payload.velocity,
+              distance: status === EngineStatuses.STOPPED ? 0 : action.payload.distance,
             };
           }
-          if (action.meta.arg.status === EngineStatuses.STARTED) {
-            if (index >= 0) {
-              state.data[index] = {
-                ...state.data[index],
-                engineStatus: action.meta.arg.status,
-                velocity: action.payload?.velocity,
-                distance: action.payload?.distance,
-              };
-            }
-            state.race.cars[index] = {
-              ...state.data[index],
-              engineStatus: action.meta.arg.status,
-              velocity: action.payload?.velocity,
-              distance: action.payload?.distance,
-            };
-          }
+          state.race.cars[index] = {
+            ...state.data[index],
+            engineStatus: action.meta.arg.status,
+            velocity: status === EngineStatuses.STOPPED ? 0 : action.payload.velocity,
+            distance: status === EngineStatuses.STOPPED ? 0 : action.payload.distance,
+          };
         }
       })
       .addCase(toggleCarEngineAsync.rejected, (state, action) => {
@@ -324,9 +281,6 @@ const CarsSlice = createSlice({
 });
 
 export const {
-  createCar,
-  deleteCar,
-  generateCars,
   setCurrentPage,
   selectCar,
   updateSelectedCarColor,
@@ -338,9 +292,7 @@ export const {
   updateRaceStatus,
   updateRaceParticipants,
   setCreateFormField,
-  setUpdateFormField,
   clearForm,
-  clearUpdateForm,
 } = CarsSlice.actions;
 
 export default CarsSlice.reducer;

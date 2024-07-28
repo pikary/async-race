@@ -8,7 +8,7 @@ import {
   updateWinnerAsync,
 } from '../store/winners/api';
 import { updateRaceStatus } from '../store/cars';
-import { isApiError } from '../utils/baseApi';
+import { isApiError } from '../utils/baseApi/types';
 
 const useWinner = () => {
   const { data: cars, race } = useTypedSelector((state) => state.cars);

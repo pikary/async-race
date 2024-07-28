@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { OrderTypes, SortTypes, Winner } from './types';
 import { SliceState } from '../types';
 import { getWinnersAsync, updateWinnerAsync, createWinnerAsync } from './api';
-import { isApiError } from '../../utils/baseApi';
+import { isApiError } from '../../utils/baseApi/types';
 
 interface WinnersSliceState extends SliceState<Winner[] | undefined> {
   currentPage: number;

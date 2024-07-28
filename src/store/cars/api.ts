@@ -1,10 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Car, EngineStatuses } from './types';
 import baseRequest, {
+
+} from '../../utils/baseApi/baseApi';
+import {
   AbortError,
   ApiError,
   isApiError,
-} from '../../utils/baseApi';
+} from '../../utils/baseApi/types';
 
 interface CarReqBody {
   name: string;

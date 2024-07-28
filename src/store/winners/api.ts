@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import baseRequest, { ApiError, isApiError } from '../../utils/baseApi';
+import baseRequest from '../../utils/baseApi/baseApi';
+import { isApiError, ApiError } from '../../utils/baseApi/types';
 import { OrderTypes, SortTypes, Winner } from './types';
 import { Car } from '../cars/types';
 
