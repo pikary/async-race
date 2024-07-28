@@ -9,29 +9,33 @@ import useWinner from './hooks/useFindWInner';
 // import { Winner } from './store/winners/types';
 
 function App() {
-  const { winner, handleBannerClose } = useWinner();
+    const { winner, handleBannerClose } = useWinner();
 
-  return (
-      <div className="App">
-          <main>
-              <BrowserRouter>
-                  <Header />
-                  <Routes>
-                      <Route index path="/" element={<Garage />} />
-                      <Route path="/winners" element={<Winners />} />
-                  </Routes>
-              </BrowserRouter>
-              {winner && (
-              <WinnerBanner
-                winnerName={winner.name}
-                time={(winner.distance / winner.velocity / 1000).toFixed(2)}
-                closeBanner={handleBannerClose}
-              />
-              )}
-          </main>
-          <Footer />
-      </div>
-  );
+    return (
+        <div className="App">
+            <main>
+                <BrowserRouter>
+                    <Header />
+                    <Routes>
+                        <Route index path="/" element={<Garage />} />
+                        <Route path="/winners" element={<Winners />} />
+                    </Routes>
+                </BrowserRouter>
+                {winner && (
+                    <WinnerBanner
+                        winnerName={winner.name}
+                        time={(
+                            winner.distance /
+                            winner.velocity /
+                            1000
+                        ).toFixed(2)}
+                        closeBanner={handleBannerClose}
+                    />
+                )}
+            </main>
+            <Footer />
+        </div>
+    );
 }
 
 export default App;

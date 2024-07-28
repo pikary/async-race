@@ -5,7 +5,8 @@
     },
     "extends": [
         "plugin:react/recommended",
-        "airbnb"
+        "airbnb",
+        "plugin:prettier/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -24,27 +25,15 @@
             "typescript": {}
         }
     },
-    "plugins": [
-        "react",
-        "@typescript-eslint",
-        "prettier"
-    ],
+    "plugins": ["react", "@typescript-eslint", "prettier"],
     "rules": {
         "react/jsx-filename-extension": [
             2,
             {
-                "extensions": [
-                    ".js",
-                    ".jsx",
-                    ".ts",
-                    ".tsx"
-                ]
+                "extensions": [".js", ".jsx", ".ts", ".tsx"]
             }
         ],
-        "react/jsx-indent": [
-            "error",
-            4
-        ],
+        "react/jsx-indent": ["error", 4],
         "no-tabs": "error",
         "import/extensions": [
             "error",
@@ -58,6 +47,5 @@
         ],
         "linebreak-style": 0,
         "react/button-has-type": "off"
-
     }
 }

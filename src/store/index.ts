@@ -5,8 +5,8 @@ import CarsReducer from './cars';
 import WinnersReducer from './winners';
 
 const rootReducer = combineReducers({
-  cars: CarsReducer,
-  winners: WinnersReducer,
+    cars: CarsReducer,
+    winners: WinnersReducer,
 });
 
 const store = configureStore({ reducer: rootReducer });

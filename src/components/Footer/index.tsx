@@ -4,9 +4,9 @@ import React from 'react';
 import './styles.scss';
 
 function Footer() {
-  return (
-      <footer>
-          {/* ads
+    return (
+        <footer>
+            {/* ads
           <a href="https://github.com/pikary/async-race">
               <GitIcon width={120} height={120} />
               {' '}
@@ -15,8 +15,8 @@ function Footer() {
               <EpamIcon width={120} />
               {' '}
           </a> */}
-      </footer>
-  );
+        </footer>
+    );
 }
 
 export default Footer;
