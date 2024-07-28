@@ -65,7 +65,7 @@
 
 ## 🎨 Prettier and ESLint Configuration (10 points)
 
--   [ ] **Prettier Setup (5 points):** Prettier is correctly set up with two scripts in `package.json`: `format` for auto-formatting and `ci:format` for checking issues.
+-   [✅] **Prettier Setup (5 points):** Prettier is correctly set up with two scripts in `package.json`: `format` for auto-formatting and `ci:format` for checking issues.
 -   [✅] **ESLint Configuration (5 points):** ESLint is configured with the [Airbnb style guide](https://www.npmjs.com/package/eslint-config-airbnb). A `lint` script in `package.json` runs ESLint checks. Configuration files should reflect strict TypeScript settings as per `tsconfig.json`.
 
 ## 🌟 Overall Code Quality. (100 points) _Skip during self-check_
