@@ -1,8 +1,8 @@
 # Async Race
 
-### Deploy
+## Deploy
 
-[https://66a4e06f07f56f05906b32f1--glittering-salamander-35c40a.netlify.app/]
+[https://master--nurlan-baitassov-async-race.netlify.app/]
 
 ## Checklist 400\_/400 pts
 
