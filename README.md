@@ -2,7 +2,7 @@
 
 ## Deploy
 
-[https://master--nurlan-baitassov-async-race.netlify.app/]
+https://master--nurlan-baitassov-async-race.netlify.app/
 
 ## Checklist 400\_/400 pts
 
