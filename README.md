@@ -1,8 +1,10 @@
 # Async Race
 
 ## Deploy
-
 https://master--nurlan-baitassov-async-race.netlify.app/
+
+## Backend repo
+https://github.com/mikhama/async-race-api
 
 ## Checklist 400\_/400 pts
 
