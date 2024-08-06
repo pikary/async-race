@@ -6,7 +6,7 @@ https://master--nurlan-baitassov-async-race.netlify.app/
 ## Run guide
 -    Clone backend repository
 -    Install packages and run backend server: npm i --> npm run start
--    Clone this repository
+-    Clone this repository (Or view the deploy link)
 -    install dependencies: npm i
 -    run application: npm run start
 Note: backend should run on port 3000
