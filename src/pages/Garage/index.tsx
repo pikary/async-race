@@ -124,7 +124,7 @@ function Garage() {
                 <GarageBoundary />
                 <div style={{ marginBottom: 30 }}>
                     {!data || data.length === 0 ? (
-                        <h4 className="garage__race__err">No cars</h4>
+                        <h5 className="garage__race__err">No cars</h5>
                     ) : (
                         data.map((car) => <Track key={car.id} car={car} />)
                     )}

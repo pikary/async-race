@@ -29,7 +29,7 @@ function Button(props: ButtonProps) {
             disabled={disabled || false}
             onClick={onClick}
             className={classnames('button', color, className)}
-            type={type}
+            type={type || 'button'}
         >
             {/* {text && (
           <p>

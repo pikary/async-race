@@ -23,8 +23,6 @@ const useWinner = () => {
                 (car) => car.engineStatus === EngineStatuses.FINISHED
             )
         ) {
-            console.log(race.cars);
-
             const sortedParticipants = [...race.cars]
                 .filter(
                     (car) => car.engineStatus && car.engineStatus !== 'crashed'

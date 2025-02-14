@@ -23,6 +23,7 @@ function Pagination({
                 <Button
                     className="pagination__controls__btn"
                     text=""
+                    type="button"
                     onClick={onPreviousPage}
                     icon={<BiLeftArrow size={25} />}
                 />
@@ -30,6 +31,7 @@ function Pagination({
                 <Button
                     className="pagination__controls__btn"
                     text=""
+                    type="button"
                     onClick={onNextPage}
                     icon={<BiRightArrow size={25} />}
                 />

@@ -122,6 +122,7 @@ function Track({ car }: TrackProps) {
             <div className="track__car">
                 <div className="track__car__btns">
                     <Button
+                        type="button"
                         shortenText="S"
                         text="SELECT"
                         color="blue"
